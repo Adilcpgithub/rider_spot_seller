@@ -1,0 +1,48 @@
+{
+    "project_info": {
+      "project_number": "544605270040",
+      "project_id": "nutranest-a6417",
+      "storage_bucket": "nutranest-a6417.firebasestorage.app"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:544605270040:android:6b04c483129ef4a1fc536d",
+          "android_client_info": {
+            "package_name": "com.example.nutra_nest"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyBVFagVJ8MXNIX7Tz8loAO0Qp-VdAMwYfc"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:544605270040:android:0a4d85f987f6d71efc536d",
+          "android_client_info": {
+            "package_name": "com.example.ride_spot"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyBVFagVJ8MXNIX7Tz8loAO0Qp-VdAMwYfc"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
