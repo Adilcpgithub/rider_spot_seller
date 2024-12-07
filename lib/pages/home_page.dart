@@ -1,68 +1,28 @@
-import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
-import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
-import 'package:ride_spot/pages/test_page.dart';
+import 'package:ride_spot/pages/add_product.dart';
+import 'package:ride_spot/utility/colors.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    void _onItemTapped(int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-
     return Scaffold(
-      body: pages[_selectedIndex],
-      bottomNavigationBar: CurvedNavigationBar(
-        color: Colors.green,
-        onTap: (value) => _onItemTapped(value),
-        backgroundColor: color[_selectedIndex],
-        items: const [
-          CurvedNavigationBarItem(
-            child: Icon(Icons.home_outlined),
-            label: 'Home',
+      body: Center(),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 10, right: 10),
+        child: FloatingActionButton(
+          backgroundColor: Colors.grey[300],
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+              return AddProductPage();
+            }));
+          },
+          child: const Icon(
+            Icons.add,
+            color: CustomColor.primaryColor,
           ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.local_shipping),
-            label: 'Orders',
-          ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.shopping_cart_sharp),
-            label: 'Store',
-          ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.settings),
-            label: 'Settings',
-          )
-        ],
-        buttonBackgroundColor: Colors.amber,
-      ),
-    );
-  }
-
-  List<Widget> pages = [Test(), Test(), Test(), ss()];
-  List<Color> color = [Colors.white, Colors.white, Colors.white, Colors.blue];
-}
-
-class ss extends StatelessWidget {
-  const ss({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.blue,
-      body: Center(
-        child: Text('addfasdf'),
+        ),
       ),
     );
   }
