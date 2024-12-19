@@ -255,18 +255,12 @@ class AuthService {
   //       .update({'phoneNumber': phoneNumber});
   // }
   Future<void> deleteCycle(String documentId) async {
-    UserStatus userStatus = UserStatus();
-    final userId = await userStatus.getUserId();
     try {
       // Reference to the specific cycle document
-      final cycleDocRef = FirebaseFirestore.instance
-          .collection('cycles')
-          .doc(userId)
-          .collection('cycles')
-          .doc(documentId);
+      final cycleDocRef = FirebaseFirestore.instance.collection('cycles');
 
       // Delete the document
-      await cycleDocRef.delete();
+      await cycleDocRef.doc(documentId).delete();
 
       log('Cycle with ID $documentId deleted successfully.');
     } catch (e) {

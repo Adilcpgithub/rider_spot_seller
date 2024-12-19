@@ -2,6 +2,8 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/pages/home_page.dart';
 import 'package:ride_spot/pages/settings_page.dart';
 import 'package:ride_spot/pages/add_product.dart';
@@ -32,11 +34,23 @@ class _BottomNavigationState extends State<BottomNavigationPage> {
       });
     }
 
+    List<Widget> pages = [
+      HomePage(),
+      SettingsPage(),
+      StorePage(),
+      const SettingsPage()
+    ];
+    List<Color> color = [
+      Colors.white,
+      Colors.white,
+      Colors.white,
+      Colors.white
+    ];
+
     return Scaffold(
       body: pages[_selectedIndex],
       bottomNavigationBar: CurvedNavigationBar(
         index: _selectedIndex,
-        // key: Key(_selectedIndex.toString()),
         animationDuration: const Duration(milliseconds: 500),
         color: Color.fromARGB(255, 223, 223, 223),
         onTap: (value) => _onItemTapped(value),
@@ -83,14 +97,6 @@ class _BottomNavigationState extends State<BottomNavigationPage> {
       ),
     );
   }
-
-  List<Widget> pages = [
-    HomePage(),
-    SettingsPage(),
-    StorePage(),
-    SettingsPage()
-  ];
-  List<Color> color = [Colors.white, Colors.white, Colors.white, Colors.white];
 }
 
 void _showEditDialog(BuildContext context) {

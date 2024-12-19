@@ -20,7 +20,7 @@ class AddImageLoading extends AddProductState {}
 
 class AddProductFailure extends AddProductState {
   final String error;
-  AddProductFailure(this.error);
+  const AddProductFailure(this.error);
   @override
   List<Object?> get props => [error];
 }
@@ -31,5 +31,13 @@ class AddProductSuccess extends AddProductState {}
 
 class ShowAllProduct extends AddProductState {
   final List<Map<String, dynamic>>? cycles;
+
+  @override
+  String toString() {
+    return 'now cycles length is ${cycles?.length}';
+  }
+
+  @override
+  List<Object?> get props => [cycles];
   const ShowAllProduct(this.cycles);
 }

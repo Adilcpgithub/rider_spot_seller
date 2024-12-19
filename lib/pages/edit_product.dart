@@ -1,34 +1,49 @@
-import 'dart:io';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ride_spot/auth/modal/product_modal.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/pages/bottom_navigation_page.dart';
 import 'package:ride_spot/utility/colors.dart';
 
-class AddProductPage extends StatefulWidget {
-  const AddProductPage({
-    super.key,
-  });
+class EditProductPage extends StatefulWidget {
+  final String documetId;
+  final Cycles cycles;
+  const EditProductPage(
+      {super.key, required this.documetId, required this.cycles});
 
   @override
-  State<AddProductPage> createState() => _TestState();
+  State<EditProductPage> createState() => _TestState();
 }
 
-class _TestState extends State<AddProductPage> {
+class _TestState extends State<EditProductPage> {
   final _formKey = GlobalKey<FormState>();
-  File? fileImage;
+  String fileImage = '';
   String? category = '';
   TextEditingController cycleNameController = TextEditingController();
   TextEditingController brandController = TextEditingController();
   TextEditingController priceNameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  @override
+  void initState() {
+    fetchData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildAddProductForm(),
     );
+  }
+
+  fetchData() {
+    cycleNameController.text = widget.cycles.cycleName;
+    brandController.text = widget.cycles.brand;
+    priceNameController.text = widget.cycles.price;
+    descriptionController.text = widget.cycles.description;
+    fileImage = widget.cycles.fileImage;
+    category = widget.cycles.category;
   }
 
   dd() {
@@ -38,38 +53,7 @@ class _TestState extends State<AddProductPage> {
   Widget _buildAddProductForm() {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Add Product',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            shadows: [
-              Shadow(
-                offset: Offset(2, 2),
-                blurRadius: 3,
-                color: Colors.black26,
-              ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                // Color.fromARGB(251, 255, 132, 0), // Your primary color
-                // Color.fromARGB(
-                //     255, 255, 191, 0), // A complementary golden shade
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-        elevation: 4,
-        backgroundColor: Colors.blue,
+        title: const Center(child: const Text('Add New Cycle              ')),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -140,6 +124,7 @@ class _TestState extends State<AddProductPage> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
+                value: category,
                 //validator: (value) {return},
                 decoration: const InputDecoration(
                   labelText: 'Category',
@@ -161,7 +146,6 @@ class _TestState extends State<AddProductPage> {
                       value: 'Folding Bikes', child: Text('Folding Bikes')),
                 ],
                 onChanged: (value) {
-                  print(value);
                   category = value;
                 },
               ),
@@ -204,23 +188,16 @@ class _TestState extends State<AddProductPage> {
                         border: Border.all(width: 1.9),
                       ),
                       height: 200,
-                      child: const Center(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.add_photo_alternate,
-                            size: 50,
-                            color: Colors.grey,
+                      child: Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Image.network(
+                            fileImage,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
                           ),
-                          SizedBox(height: 8),
-                          //   CircularProgressIndicator(),
-                          Text(
-                            'No Image Selected',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      )),
+                        ),
+                      ),
                     ),
                   );
                 }
@@ -253,7 +230,8 @@ class _TestState extends State<AddProductPage> {
                     // if ((state as ShowAddProductImage).fileImage!=null){}
                     final currentState = context.read<AddProductBloc>().state;
                     if (currentState is ShowAddProductImage &&
-                        currentState.fileImage != null) {
+                            currentState.fileImage != null ||
+                        fileImage.isNotEmpty) {
                       if (category!.isNotEmpty) {
                         print('successfully workging submittion');
 
@@ -265,17 +243,16 @@ class _TestState extends State<AddProductPage> {
                         log(brand);
                         log(price);
                         log(description);
-                        SubmitCycleDetailsEvent event = SubmitCycleDetailsEvent(
+                        SubmitCycleDetailsOnUpdateEvent event =
+                            SubmitCycleDetailsOnUpdateEvent(
                           name: name,
                           brand: brand,
                           price: price,
                           category: category!,
                           description: description,
+                          documentId: widget.documetId,
                         );
                         context.read<AddProductBloc>().add(event);
-
-                        // Wait for the product to be added
-                        await Future.delayed(const Duration(milliseconds: 500));
 
                         if (!mounted) return;
 
@@ -296,11 +273,11 @@ class _TestState extends State<AddProductPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: CustomColor.primaryColor,
+                  backgroundColor: Colors.blue,
                   padding: const EdgeInsets.all(16),
                 ),
                 child: const Text(
-                  'Add Product',
+                  'Update Product',
                   style: TextStyle(fontSize: 16),
                 ),
               ),

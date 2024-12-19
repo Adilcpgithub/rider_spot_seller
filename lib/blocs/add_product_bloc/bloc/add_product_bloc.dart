@@ -19,6 +19,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     on<AddProductImage>(_onUploadProductImage);
     on<SubmitCycleDetailsEvent>(_onSubmitCyleDetails);
     on<GetProduct>(_getSellerProduct);
+    on<SubmitCycleDetailsOnUpdateEvent>(_onUpdateSubmitCyleDetails);
   }
   UserStatus userStatus = UserStatus();
   File? finalImage;
@@ -62,81 +63,126 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
 
   Future<void> _onSubmitCyleDetails(
       SubmitCycleDetailsEvent event, Emitter<AddProductState> emit) async {
-    // emit(AddProductLoading());
-    //  'seller/${sellerId}/cycle_image.jpg'
-
-    UserStatus userStatus = UserStatus();
-    final userId = await userStatus.getUserId();
-    if (userId.isEmpty) {
-      log('Error: User ID is null or empty');
-      return; // Exit the function early to prevent further errors
-    } else {
-      log(userId);
-    }
     try {
-      if (finalImage == null) {
-        emit(AddProductFailure('no image selected'));
-      } else {
-        final file = (state as ShowAddProductImage).fileImage;
+      UserStatus userStatus = UserStatus();
+      final userId = await userStatus.getUserId();
 
-        final ref = _storage.ref().child('seller/${userId}/cycle_image.jpg');
-        final uploadTask = ref.putFile(file!);
-        await uploadTask.whenComplete(() {});
-
-        // Get the download URL
-        final imageUrl = await ref.getDownloadURL();
-        final docRef = _firestore.collection('cycles').doc(userId);
-
-        await docRef.collection('cycles').add({
-          'name': event.name,
-          'brand': event.brand,
-          'price': event.price,
-          'category': event.category,
-          'description': event.description,
-          'image_url': imageUrl,
-          'seller_id': UserStatus.userIdFinal,
-          'created_at': FieldValue.serverTimestamp(),
-        });
-
-        emit(AddProductSuccess());
+      if (userId.isEmpty) {
+        emit(AddProductFailure('User ID is missing'));
+        return;
       }
+
+      // Upload image and get URL (existing code)
+      final file = (state as ShowAddProductImage).fileImage;
+      final uniqueImageName = DateTime.now().millisecondsSinceEpoch.toString();
+      final ref = _storage
+          .ref()
+          .child('seller/${userId}/${uniqueImageName}/cycle_image.jpg');
+
+      final uploadTask = ref.putFile(file!);
+      await uploadTask.whenComplete(() {});
+      final imageUrl = await ref.getDownloadURL();
+
+      // Add new product
+      await _firestore.collection('cycles').add({
+        'name': event.name,
+        'brand': event.brand,
+        'price': event.price,
+        'category': event.category,
+        'description': event.description,
+        'image_url': imageUrl,
+        'seller_id': userId,
+        'created_at': FieldValue.serverTimestamp(),
+      });
+
+      // Important: Fetch updated data immediately after adding
+      await _getSellerProduct(GetProduct(), emit);
     } catch (e) {
-      log('errr $e');
       emit(AddProductFailure(e.toString()));
     }
   }
 
-  _getSellerProduct(GetProduct event, Emitter<AddProductState> emit) async {
-    UserStatus userStatus = UserStatus();
-    final userId = await userStatus.getUserId();
-    if (userId.isEmpty) {
-      log('Error: User ID is null or empty');
-      return; // Exit the function early to prevent further errors
+  Future<void> _onUpdateSubmitCyleDetails(SubmitCycleDetailsOnUpdateEvent event,
+      Emitter<AddProductState> emit) async {
+    try {
+      UserStatus userStatus = UserStatus();
+      final userId = await userStatus.getUserId();
+
+      if (userId.isEmpty) {
+        emit(AddProductFailure('User ID is missing'));
+        return;
+      }
+
+      // Upload image and get URL (existing code)
+      final file = (state as ShowAddProductImage).fileImage;
+      final uniqueImageName = DateTime.now().millisecondsSinceEpoch.toString();
+      final ref = _storage
+          .ref()
+          .child('seller/${userId}/${uniqueImageName}/cycle_image.jpg');
+
+      final uploadTask = ref.putFile(file!);
+      await uploadTask.whenComplete(() {});
+      final imageUrl = await ref.getDownloadURL();
+
+      // Add new product
+      // await _firestore.collection('cycles').add({
+      //   'name': event.name,
+      //   'brand': event.brand,
+      //   'price': event.price,
+      //   'category': event.category,
+      //   'description': event.description,
+      //   'image_url': imageUrl,
+      //   'seller_id': userId,
+      //   'created_at': FieldValue.serverTimestamp(),
+      // });
+      await _firestore.collection('cycles').doc(event.documentId).update({
+        'name': event.name,
+        'brand': event.brand,
+        'price': event.price,
+        'category': event.category,
+        'description': event.description,
+        'image_url': imageUrl,
+        'seller_id': userId,
+        'created_at': FieldValue.serverTimestamp(),
+      });
+
+      // Important: Fetch updated data immediately after adding
+      await _getSellerProduct(GetProduct(), emit);
+    } catch (e) {
+      emit(AddProductFailure(e.toString()));
     }
-    log(userId);
-    final cyclesSnapshot = await _firestore
-        .collection('cycles')
-        .doc(userId)
-        .collection('cycles')
-        .where('seller_id', isEqualTo: userId)
-        .get();
-
-    // Check if cycles exist
-    if (cyclesSnapshot.docs.isEmpty) {
-      log('No cycles found for seller: $userId');
-      return;
-    }
-
-    // Map results to a list
-    List<Map<String, dynamic>> cycles = cyclesSnapshot.docs.map(
-      (doc) {
-        return {...doc.data(), 'documentId': doc.id};
-      },
-    ).toList();
-
-    log('Fetched cycles: $cycles');
-    // log('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmessage ${cycles[1]['documentId']}');
-
-    emit(ShowAllProduct(cycles));
   }
+
+  Future<void> _getSellerProduct(
+      GetProduct event, Emitter<AddProductState> emit) async {
+    try {
+      UserStatus userStatus = UserStatus();
+      final userId = await userStatus.getUserId();
+      print('cheking data ');
+      if (userId.isEmpty) {
+        emit(ShowAllProduct([]));
+        return;
+      }
+      print('user id is not empty user id is $userId');
+
+      // Get products with ordering
+      final cyclesSnapshot = await _firestore
+          .collection('cycles')
+          .where('seller_id', isEqualTo: userId)
+          .get();
+
+      List<Map<String, dynamic>> cycles = cyclesSnapshot.docs.map((doc) {
+        return {...doc.data(), 'documentId': doc.id};
+      }).toList();
+      log('cycles length is ${cycles.length}');
+      log('cycles length is ${cycles}');
+
+      emit(ShowAllProduct(cycles));
+    } catch (e) {
+      log('Error fetching products: $e');
+      emit(AddProductFailure(e.toString()));
+    }
+  }
+
+  _deletProduct(DeleteProduct event, Emitter<AddProductState> emit) {}
 }

@@ -9,6 +9,7 @@ import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/login/bloc/login_bloc.dart';
 import 'package:ride_spot/blocs/sign_up/bloc/sign_up_bloc.dart';
 import 'package:ride_spot/pages/bottom_navigation_page.dart';
+import 'package:ride_spot/utility/app_them.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,9 +52,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => SignUpBloc()),
       ],
       child: MaterialApp(
-        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+        theme: AppThem.theme,
         debugShowCheckedModeBanner: false,
-        home: status ? BottomNavigationPage() : LoginScreen(),
+        home: status ? BottomNavigationPage() : const LoginScreen(),
       ),
     );
   }
