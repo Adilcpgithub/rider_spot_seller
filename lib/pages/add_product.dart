@@ -149,16 +149,41 @@ class _TestState extends State<AddProductPage> {
                 ),
                 items: const [
                   DropdownMenuItem(
-                      value: 'Mountain Bike', child: Text('Mountain Bike')),
+                      value: 'Mountain Bike',
+                      child: Text(
+                        'Mountain Bike',
+                        style: TextStyle(color: CustomColor.primaryColor),
+                      )),
                   DropdownMenuItem(
-                      value: 'Road Bike', child: Text('Road Bike')),
-                  DropdownMenuItem(value: 'Hybrid', child: Text('Hybrid')),
+                      value: 'Road Bike',
+                      child: Text(
+                        'Road Bike',
+                        style: TextStyle(color: CustomColor.primaryColor),
+                      )),
                   DropdownMenuItem(
-                      value: 'Electric Bikes', child: Text('Electric Bikes')),
+                      value: 'Hybrid',
+                      child: Text(
+                        'Hybrid',
+                        style: TextStyle(color: CustomColor.primaryColor),
+                      )),
                   DropdownMenuItem(
-                      value: "Kids' Bikes", child: Text("Kids' Bikes")),
+                      value: 'Electric Bikes',
+                      child: Text(
+                        'Electric Bikes',
+                        style: TextStyle(color: CustomColor.primaryColor),
+                      )),
                   DropdownMenuItem(
-                      value: 'Folding Bikes', child: Text('Folding Bikes')),
+                      value: "Kids' Bikes",
+                      child: Text(
+                        "Kids' Bikes",
+                        style: TextStyle(color: CustomColor.primaryColor),
+                      )),
+                  DropdownMenuItem(
+                      value: 'Folding Bikes',
+                      child: Text(
+                        'Folding Bikes',
+                        style: TextStyle(color: CustomColor.primaryColor),
+                      )),
                 ],
                 onChanged: (value) {
                   print(value);
@@ -177,7 +202,8 @@ class _TestState extends State<AddProductPage> {
                       decoration: BoxDecoration(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(6)),
-                        border: Border.all(width: 1.9),
+                        border: Border.all(
+                            width: 1.9, color: CustomColor.primaryColor),
                       ),
                       height: 200,
                       child: Center(
@@ -201,7 +227,8 @@ class _TestState extends State<AddProductPage> {
                       decoration: BoxDecoration(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(6)),
-                        border: Border.all(width: 1.9),
+                        border: Border.all(
+                            width: 1.9, color: CustomColor.primaryColor),
                       ),
                       height: 200,
                       child: const Center(
@@ -211,13 +238,13 @@ class _TestState extends State<AddProductPage> {
                           Icon(
                             Icons.add_photo_alternate,
                             size: 50,
-                            color: Colors.grey,
+                            color: CustomColor.primaryColor,
                           ),
                           SizedBox(height: 8),
                           //   CircularProgressIndicator(),
                           Text(
                             'No Image Selected',
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(color: CustomColor.primaryColor),
                           ),
                         ],
                       )),
@@ -301,7 +328,7 @@ class _TestState extends State<AddProductPage> {
                 ),
                 child: const Text(
                   'Add Product',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
             ],

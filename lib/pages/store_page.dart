@@ -8,6 +8,7 @@ import 'package:ride_spot/auth/modal/product_modal.dart';
 
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/pages/edit_product.dart';
+import 'package:ride_spot/utility/colors.dart';
 
 class StorePage extends StatefulWidget {
   const StorePage({
@@ -61,17 +62,7 @@ class _StorePageState extends State<StorePage> {
         ),
         centerTitle: true,
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromARGB(251, 255, 132, 0), // Your primary color
-                Color.fromARGB(
-                    255, 255, 191, 0), // A complementary golden shade
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
+          decoration: const BoxDecoration(color: CustomColor.primaryColor),
         ),
         elevation: 4,
         backgroundColor: Colors.blue,
@@ -178,22 +169,52 @@ class _StorePageState extends State<StorePage> {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('Confirm Deletion'),
-          content: const Text('Are you sure you want to delete this cycle?'),
+          backgroundColor: CustomColor.primaryColor,
+          title: Center(
+              child: const Text(
+            'Confirm Deletion',
+            style: TextStyle(
+              fontSize: 22, // Larger font for emphasis
+              fontWeight: FontWeight.bold,
+              color: Colors.white, // Contrasts well with the gradient
+              shadows: [
+                // Shadow(
+                //   offset: Offset(2, 2),
+                //   blurRadius: 1,
+                //   color: Colors.black26, // Subtle shadow for depth
+                // ),
+              ],
+            ),
+          )),
+          content: const Text(
+            'Are you sure you want to delete this cycle?',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(ctx).pop(false); // Return false on cancel
               },
-              child: const Text('Cancel'),
+              child: Container(
+                  padding: const EdgeInsetsDirectional.all(8),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(9)),
+                  child: const Text('Cancel')),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(ctx).pop(true); // Return true on confirm
               },
-              child: const Text(
-                'Delete',
-                style: TextStyle(color: Colors.red),
+              child: Container(
+                padding: const EdgeInsetsDirectional.all(8),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(9)),
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
             ),
           ],
@@ -224,9 +245,8 @@ Widget _ProductCard(
           borderRadius: BorderRadius.circular(15),
           gradient: const LinearGradient(
             colors: [
-              Color.fromARGB(146, 255, 132, 0),
-              Color.fromARGB(131, 255, 193, 7),
-              Color.fromARGB(100, 192, 228, 30),
+              Color.fromARGB(143, 74, 145, 226), // Light blue
+              Color.fromARGB(172, 0, 123, 255), //
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -234,49 +254,47 @@ Widget _ProductCard(
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 0, left: 0, right: 0),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
-                ),
-                child: Image.network(
-                  imagUrl,
-                  height: 100,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Stack(
-                      children: [
-                        SizedBox(
-                          height: 100,
-                        ),
-                        Positioned(
-                            child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 20),
-                            child: Icon(
-                              Icons.cloud_off,
-                              size: 50,
-                            ),
-                          ),
-                        ))
-                      ],
-                    );
-                  },
-                ),
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
+              ),
+              child: Image.network(
+                imagUrl,
+                height: 120,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // return const Stack(
+                  //   children: [
+                  //     SizedBox(
+                  //       height: 100,
+                  //     ),
+                  //     Positioned(
+                  //         child: Center(
+                  //       child: Padding(
+                  //         padding: EdgeInsets.only(top: 20),
+                  //         child: Icon(
+                  //           Icons.cloud_off,
+                  //           size: 50,
+                  //         ),
+                  //       ),
+                  //     ))
+                  //   ],
+                  // );
+                  return Center(
+                      child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ));
+                },
               ),
             ),
             Padding(
@@ -291,7 +309,7 @@ Widget _ProductCard(
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -305,7 +323,7 @@ Widget _ProductCard(
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: Colors.white,
                       ),
                     ),
                   ),

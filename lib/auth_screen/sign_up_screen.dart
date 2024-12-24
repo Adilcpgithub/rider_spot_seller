@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/auth/auth_serviece.dart';
 import 'package:ride_spot/auth_screen/login_screen.dart';
 import 'package:ride_spot/pages/bottom_navigation_page.dart';
+import 'package:ride_spot/utility/colors.dart';
 
 import '../blocs/sign_up/bloc/sign_up_bloc.dart';
 
@@ -28,7 +29,7 @@ class SignUpScreen extends StatelessWidget {
           return SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 SizedBox(
@@ -49,7 +50,7 @@ class SignUpScreen extends StatelessWidget {
                     child: Container(
                       height: 600,
                       decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 0, 0, 0),
+                        color: CustomColor.primaryColor,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20),

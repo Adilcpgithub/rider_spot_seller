@@ -65,7 +65,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       SubmitCycleDetailsEvent event, Emitter<AddProductState> emit) async {
     try {
       UserStatus userStatus = UserStatus();
-      final userId = await userStatus.getUserId();
+      final userId = await userStatus.getSellerId();
 
       if (userId.isEmpty) {
         emit(AddProductFailure('User ID is missing'));
@@ -106,7 +106,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       Emitter<AddProductState> emit) async {
     try {
       UserStatus userStatus = UserStatus();
-      final userId = await userStatus.getUserId();
+      final userId = await userStatus.getSellerId();
 
       if (userId.isEmpty) {
         emit(AddProductFailure('User ID is missing'));
@@ -157,7 +157,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       GetProduct event, Emitter<AddProductState> emit) async {
     try {
       UserStatus userStatus = UserStatus();
-      final userId = await userStatus.getUserId();
+      final userId = await userStatus.getSellerId();
       print('cheking data ');
       if (userId.isEmpty) {
         emit(ShowAllProduct([]));

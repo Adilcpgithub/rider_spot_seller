@@ -7,6 +7,7 @@ import 'package:ride_spot/auth/auth_serviece.dart';
 import 'package:ride_spot/auth_screen/sign_up_screen.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/login/bloc/login_bloc.dart';
 import 'package:ride_spot/pages/bottom_navigation_page.dart';
+import 'package:ride_spot/utility/colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -54,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 480,
                     width: deviceWidth > 400 ? 600 : deviceWidth,
                     decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: CustomColor.primaryColor,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
@@ -64,8 +65,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 35),
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20, bottom: 5),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 5),
                             child: Flexible(
                               child: Text(
                                 'Log In',
@@ -294,12 +295,14 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailorPhoneNumberController.clear();
         _passwordController.clear();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response.errorMessage ?? 'Registration failed'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response.errorMessage ?? 'Registration failed'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }
@@ -347,10 +350,10 @@ class CustomTextFormField extends StatelessWidget {
           style: const TextStyle(fontSize: 18, color: Colors.white),
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.grey[900],
+            fillColor: const Color(0xFF2196F3).withOpacity(0.1),
             floatingLabelBehavior: FloatingLabelBehavior.never,
             labelText: labelText,
-            labelStyle: const TextStyle(fontSize: 18, color: Colors.grey),
+            labelStyle: const TextStyle(fontSize: 18, color: Colors.white),
             hintText: hintText,
             prefixIcon: prefixIcon,
 
@@ -389,7 +392,7 @@ class CustomTextbutton extends StatelessWidget {
       {super.key,
       required this.buttomName,
       required this.voidCallBack,
-      this.color = const Color.fromARGB(255, 92, 90, 90)});
+      this.color = Colors.black});
 
   @override
   Widget build(BuildContext context) {

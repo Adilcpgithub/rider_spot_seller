@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/pages/home_page.dart';
+import 'package:ride_spot/pages/orders_page.dart';
 import 'package:ride_spot/pages/settings_page.dart';
 import 'package:ride_spot/pages/add_product.dart';
 import 'package:ride_spot/pages/store_page.dart';
@@ -36,7 +37,7 @@ class _BottomNavigationState extends State<BottomNavigationPage> {
 
     List<Widget> pages = [
       HomePage(),
-      SettingsPage(),
+      OrdersPage(),
       StorePage(),
       const SettingsPage()
     ];

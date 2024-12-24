@@ -8,31 +8,31 @@ class AppThem {
       primaryColor: CustomColor.primaryColor,
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.orange[50],
+        fillColor: Colors.blue[50],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: const BorderSide(
-            color: Colors.orange,
+            color: CustomColor.primaryColor,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: Colors.orange.shade300,
+            color: Colors.blue.shade300,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: const BorderSide(
-            color: Color(0xFFFF8500),
+            color: CustomColor.primaryColor,
             width: 2.0,
           ),
         ),
         labelStyle: const TextStyle(
-          color: Color(0xFFFF8500),
+          color: CustomColor.primaryColor,
         ),
         hintStyle: TextStyle(
-          color: Colors.orange.shade200,
+          color: Colors.blue.shade200,
         ),
       ),
     );

@@ -73,7 +73,7 @@ class AuthService {
     required String name,
     String? imageUrl,
   }) async {
-    await _firestore.collection('users').doc(userId).set({
+    await _firestore.collection('seller').doc(userId).set({
       'name': name,
       'email': email,
       'phoneNumber': phoneNumber,
@@ -100,7 +100,7 @@ class AuthService {
     try {
       final ref = _storage
           .ref()
-          .child('users/${UserStatus.userIdFinal}/profileImage.jpg');
+          .child('seller/${UserStatus.userIdFinal}/profileImage.jpg');
       final uploadTask = ref.putFile(imageFile);
       await uploadTask.whenComplete(() {});
       log('2');
@@ -110,7 +110,7 @@ class AuthService {
 
       // Save the URL to Firestore
       try {
-        await _firestore.collection('users').doc(UserStatus.userIdFinal).set({
+        await _firestore.collection('seller').doc(UserStatus.userIdFinal).set({
           'profileImage': imageUrl,
         }, SetOptions(merge: true));
         log('4');
@@ -129,7 +129,7 @@ class AuthService {
     try {
       // Fetch the user document from Firestore
       DocumentSnapshot userSnapshot =
-          await _firestore.collection('users').doc(userId).get();
+          await _firestore.collection('seller').doc(userId).get();
 
       // Check if the document exists and return the data
       if (userSnapshot.exists) {
@@ -195,7 +195,7 @@ class AuthService {
 
   Future<void> signOut() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('user_id');
+    await prefs.remove('seller_id');
     await prefs.setBool('is_logged_in', false);
     try {
       await _auth.signOut();
@@ -222,8 +222,8 @@ class AuthService {
       }
 
       await _firestore
-          .collection('users')
-          .doc(await userStatus.getUserId())
+          .collection('seller')
+          .doc(await userStatus.getSellerId())
           .delete();
     } catch (e) {
       print("Failed to delete user account: $e");
@@ -270,7 +270,7 @@ class AuthService {
 
   getAlldata() async {
     UserStatus userStatus = UserStatus();
-    final userId = await userStatus.getUserId();
+    final userId = await userStatus.getSellerId();
     if (userId.isEmpty) {
       log('Error: User ID is null or empty');
       return; // Exit the function early to prevent further errors
@@ -291,10 +291,10 @@ class UserStatus {
   static String userIdFinal = '';
   Future<void> saveUsersSession(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_id', userId);
+    await prefs.setString('seller_id', userId);
     log('user data is daving $userId');
     await prefs.setBool('is_logged_in', true);
-    await getUserId();
+    await getSellerId();
   }
 
   Future<bool> isUserLoggedIn() async {
@@ -302,9 +302,9 @@ class UserStatus {
     return prefs.getBool('is_logged_in') ?? false;
   }
 
-  Future<String> getUserId() async {
+  Future<String> getSellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    userIdFinal = prefs.getString('user_id') ?? '';
-    return prefs.getString('user_id') ?? '';
+    userIdFinal = prefs.getString('seller_id') ?? '';
+    return prefs.getString('seller_id') ?? '';
   }
 }
