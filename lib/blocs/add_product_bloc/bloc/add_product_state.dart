@@ -10,8 +10,8 @@ sealed class AddProductState extends Equatable {
 final class AddProductInitial extends AddProductState {}
 
 class ShowAddProductImage extends AddProductState {
-  File? fileImage;
-  ShowAddProductImage({this.fileImage});
+  File fileImage;
+  ShowAddProductImage({required this.fileImage});
   @override
   List<Object?> get props => [fileImage];
 }

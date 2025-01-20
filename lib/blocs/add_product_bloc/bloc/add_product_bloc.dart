@@ -35,7 +35,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       if (pickedImage != null) {
         emit(ShowAddProductImage(fileImage: pickedImage));
       } else {
-        emit(AddProductFailure("No image selected"));
+        emit(const AddProductFailure("No image selected"));
       }
     } catch (e) {
       emit(AddProductFailure(e.toString()));
@@ -68,21 +68,33 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       final userId = await userStatus.getSellerId();
 
       if (userId.isEmpty) {
-        emit(AddProductFailure('User ID is missing'));
+        emit(const AddProductFailure('User ID is missing'));
         return;
       }
 
       // Upload image and get URL (existing code)
-      final file = (state as ShowAddProductImage).fileImage;
-      final uniqueImageName = DateTime.now().millisecondsSinceEpoch.toString();
-      final ref = _storage
-          .ref()
-          .child('seller/${userId}/${uniqueImageName}/cycle_image.jpg');
+      final file = event.images;
+      log('file lenght  is ${file.length}');
+      List<String> imageList = [];
+      if (file.isNotEmpty) {
+        for (int i = 0; i < file.length; i++) {
+          final uniqueImageName =
+              DateTime.now().millisecondsSinceEpoch.toString();
+          log('uploading image to firebase');
+          log(' sssssssssssssssssssssss');
+          final ref = _storage
+              .ref()
+              .child('seller/$userId/$uniqueImageName/cycle_image.jpg');
 
-      final uploadTask = ref.putFile(file!);
-      await uploadTask.whenComplete(() {});
-      final imageUrl = await ref.getDownloadURL();
+          final uploadTask = ref.putFile(file[i]);
+          await uploadTask.whenComplete(() {});
+          final imageUrl = await ref.getDownloadURL();
+          log('${imageList.length}');
+          imageList.add(imageUrl);
+        }
+      }
 
+      log('adding images to firebase ');
       // Add new product
       await _firestore.collection('cycles').add({
         'name': event.name,
@@ -90,7 +102,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
         'price': event.price,
         'category': event.category,
         'description': event.description,
-        'image_url': imageUrl,
+        'image_url': imageList,
         'seller_id': userId,
         'created_at': FieldValue.serverTimestamp(),
       });
@@ -114,15 +126,22 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       }
 
       // Upload image and get URL (existing code)
-      final file = (state as ShowAddProductImage).fileImage;
-      final uniqueImageName = DateTime.now().millisecondsSinceEpoch.toString();
-      final ref = _storage
-          .ref()
-          .child('seller/${userId}/${uniqueImageName}/cycle_image.jpg');
+      final file = event.images;
+      List<String> imageList = [];
+      if (file.isNotEmpty) {
+        for (int i = 0; i < file.length; i++) {
+          final uniqueImageName =
+              DateTime.now().millisecondsSinceEpoch.toString();
+          final ref = _storage
+              .ref()
+              .child('seller/$userId/$uniqueImageName/cycle_image.jpg');
 
-      final uploadTask = ref.putFile(file!);
-      await uploadTask.whenComplete(() {});
-      final imageUrl = await ref.getDownloadURL();
+          final uploadTask = ref.putFile(file[i]);
+          await uploadTask.whenComplete(() {});
+          final imageUrl = await ref.getDownloadURL();
+          imageList.add(imageUrl);
+        }
+      }
 
       // Add new product
       // await _firestore.collection('cycles').add({
@@ -141,7 +160,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
         'price': event.price,
         'category': event.category,
         'description': event.description,
-        'image_url': imageUrl,
+        'image_url': imageList,
         'seller_id': userId,
         'created_at': FieldValue.serverTimestamp(),
       });

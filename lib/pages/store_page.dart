@@ -45,7 +45,7 @@ class _StorePageState extends State<StorePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
+        title: const Text(
           'My Products',
           style: TextStyle(
             fontSize: 22, // Larger font for emphasis
@@ -70,7 +70,7 @@ class _StorePageState extends State<StorePage> {
       body: BlocBuilder<AddProductBloc, AddProductState>(
         builder: (context, state) {
           if (state is ShowAllProduct && state.cycles!.isEmpty) {
-            log('cycle not empty');
+            log('cycle is  empty');
 
             return GestureDetector(
                 onTap: () async {
@@ -96,7 +96,7 @@ class _StorePageState extends State<StorePage> {
                 final product = state.cycles![index];
 
                 return _ProductCard(
-                    imagUrl: product['image_url'],
+                    imagUrl: product['image_url'][0],
                     funtion: () {},
                     cycleName: product['name'],
                     price: product['price'],
@@ -137,7 +137,7 @@ class _StorePageState extends State<StorePage> {
                           description: product['description'],
                           cycleName: product['name'],
                           price: product['price'],
-                          fileImage: product['image_url']);
+                          fileImage: product['image_url'][0]);
 
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (ctx) {
@@ -150,7 +150,7 @@ class _StorePageState extends State<StorePage> {
               },
             );
           } else if (state is ShowAllProduct && state.cycles!.isEmpty) {
-            return const Center(child: Text('data illa moneeee.'));
+            return const Center(child: Text('no data .'));
           } else if (state is AddImageLoading) {
             log('cycle is empty');
             return Center(child: CircularProgressIndicator());
@@ -267,8 +267,11 @@ Widget _ProductCard(
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return const SizedBox(
+                    height: 120,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   );
                 },
                 errorBuilder: (context, error, stackTrace) {

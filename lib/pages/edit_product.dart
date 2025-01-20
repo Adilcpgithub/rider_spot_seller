@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/auth/modal/product_modal.dart';
@@ -168,7 +169,7 @@ class _TestState extends State<EditProductPage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: Image.file(
-                            state.fileImage!,
+                            state.fileImage as File,
                             fit: BoxFit.cover,
                             width: double.infinity,
                           ),
@@ -245,13 +246,13 @@ class _TestState extends State<EditProductPage> {
                         log(description);
                         SubmitCycleDetailsOnUpdateEvent event =
                             SubmitCycleDetailsOnUpdateEvent(
-                          name: name,
-                          brand: brand,
-                          price: price,
-                          category: category!,
-                          description: description,
-                          documentId: widget.documetId,
-                        );
+                                name: name,
+                                brand: brand,
+                                price: price,
+                                category: category!,
+                                description: description,
+                                documentId: widget.documetId,
+                                images: []);
                         context.read<AddProductBloc>().add(event);
 
                         if (!mounted) return;

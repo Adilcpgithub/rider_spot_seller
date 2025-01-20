@@ -77,6 +77,7 @@ class AuthService {
       'name': name,
       'email': email,
       'phoneNumber': phoneNumber,
+      'role': 'seller',
       if (imageUrl != null) 'profileImage': imageUrl,
     }, SetOptions(merge: true));
   }
@@ -124,6 +125,21 @@ class AuthService {
     return null;
   }
 
+  Future<bool> isUser(userId) async {
+    final userData = await _firestore.collection('seller').doc(userId).get();
+    log('kooooi');
+    if (userData.exists) {
+      if (userData['role'] == 'seller') {
+        log('okaaaaaaaaaaaaaaaaaaaaaaaaaaa1111');
+        return true;
+      } else {
+        log('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+      }
+      log('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+    }
+    return false;
+  }
+
   Future<Map<String, dynamic>?> getUserData(String userId) async {
     log('get user data called');
     try {
@@ -163,7 +179,14 @@ class AuthService {
       log(' after login  you user id is ${credential.user!.uid}');
       userStatus.saveUsersSession(credential.user!.uid);
 
-      return AuthResponse(success: true);
+      bool thisIsUser = await isUser(credential.user!.uid);
+      if (thisIsUser) {
+        return AuthResponse(success: true);
+      } else {
+        signOut();
+        return AuthResponse(
+            success: false, errorMessage: 'Wrong Email or Password');
+      }
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       // Handle specific FirebaseAuth errors
