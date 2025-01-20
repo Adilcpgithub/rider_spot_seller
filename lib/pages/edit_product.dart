@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/auth/modal/product_modal.dart';
@@ -19,7 +20,8 @@ class EditProductPage extends StatefulWidget {
 
 class _TestState extends State<EditProductPage> {
   final _formKey = GlobalKey<FormState>();
-  String fileImage = '';
+  List<String> networkImages = []; // For existing images from network
+  List<File> newImages = []; // For newly added images
   String? category = '';
   TextEditingController cycleNameController = TextEditingController();
   TextEditingController brandController = TextEditingController();
@@ -43,18 +45,32 @@ class _TestState extends State<EditProductPage> {
     brandController.text = widget.cycles.brand;
     priceNameController.text = widget.cycles.price;
     descriptionController.text = widget.cycles.description;
-    fileImage = widget.cycles.fileImage;
+    networkImages = widget.cycles.images;
     category = widget.cycles.category;
+    print('///    llllll   ${networkImages.length} hhhh ${newImages.length}');
   }
 
   dd() {
     context.read<AddProductBloc>().add(GetProduct());
   }
 
+  // Add this method to handle new image selection
+  void _handleImageSelected(AddProductState state) {
+    if (state is ShowAddProductImage && state.fileImage != null) {
+      setState(() {
+        newImages.add(state.fileImage);
+      });
+    }
+  }
+
   Widget _buildAddProductForm() {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: const Text('Add New Cycle              ')),
+        title: const Center(
+            child: Text(
+          'Edit Cycle',
+          textAlign: TextAlign.center,
+        )),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -150,59 +166,88 @@ class _TestState extends State<EditProductPage> {
                   category = value;
                 },
               ),
+              Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    width: 1.9,
+                    color: CustomColor.primaryColor,
+                  ),
+                ),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: networkImages.length + newImages.length + 1,
+                  itemBuilder: (context, index) {
+                    // Add image button at the end
+                    if (index == networkImages.length + newImages.length) {
+                      return GestureDetector(
+                        onTap: () {
+                          if (networkImages.length + newImages.length < 5) {
+                            context
+                                .read<AddProductBloc>()
+                                .add(AddProductImage());
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Maximum 5 images allowed'),
+                              ),
+                            );
+                          }
+                        },
+                        child: Container(
+                          width: 120,
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: CustomColor.primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.add_photo_alternate,
+                                size: 30,
+                                color: CustomColor.primaryColor,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Add Image (${networkImages.length + newImages.length}/5)',
+                                style: const TextStyle(
+                                  color: CustomColor.primaryColor,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    // Show existing network images first
+                    if (index < networkImages.length) {
+                      return _buildImageItem(
+                        isNetwork: true,
+                        source: networkImages[index],
+                        index: index,
+                      );
+                    }
+
+                    // Show newly added images
+                    final newImageIndex = index - networkImages.length;
+                    return _buildImageItem(
+                      isNetwork: false,
+                      source: newImages[newImageIndex],
+                      index: index,
+                    );
+                  },
+                ),
+              ),
               const SizedBox(height: 16),
-              BlocBuilder<AddProductBloc, AddProductState>(
-                  builder: (context, state) {
-                if (state is ShowAddProductImage) {
-                  return GestureDetector(
-                    onTap: () async {
-                      context.read<AddProductBloc>().add(AddProductImage());
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(6)),
-                        border: Border.all(width: 1.9),
-                      ),
-                      height: 200,
-                      child: Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: Image.file(
-                            state.fileImage as File,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return GestureDetector(
-                    onTap: () async {
-                      context.read<AddProductBloc>().add(AddProductImage());
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(6)),
-                        border: Border.all(width: 1.9),
-                      ),
-                      height: 200,
-                      child: Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: Image.network(
-                            fileImage,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }
-              }),
+              _buildImageSection(),
               const SizedBox(height: 16),
               TextFormField(
                 controller: descriptionController,
@@ -227,50 +272,57 @@ class _TestState extends State<EditProductPage> {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    // if ((state as ShowAddProductImage).fileImage!=null){}
-                    final currentState = context.read<AddProductBloc>().state;
-                    if (currentState is ShowAddProductImage &&
-                            currentState.fileImage != null ||
-                        fileImage.isNotEmpty) {
-                      if (category!.isNotEmpty) {
-                        print('successfully workging submittion');
+                  if (_formKey.currentState!.validate() &&
+                      (networkImages.isNotEmpty || newImages.isNotEmpty)) {
+                    if (category!.isNotEmpty) {
+                      SubmitCycleDetailsOnUpdateEvent event =
+                          SubmitCycleDetailsOnUpdateEvent(
+                        name: cycleNameController.text,
+                        brand: brandController.text,
+                        price: priceNameController.text,
+                        category: category!,
+                        description: descriptionController.text,
+                        documentId: widget.documetId,
+                        networkImages: networkImages,
+                        newImages: newImages,
+                      );
+                      context.read<AddProductBloc>().add(event);
 
-                        String name = cycleNameController.text;
-                        String brand = brandController.text;
-                        String price = priceNameController.text;
-                        String description = descriptionController.text;
-                        log(name);
-                        log(brand);
-                        log(price);
-                        log(description);
-                        SubmitCycleDetailsOnUpdateEvent event =
-                            SubmitCycleDetailsOnUpdateEvent(
-                                name: name,
-                                brand: brand,
-                                price: price,
-                                category: category!,
-                                description: description,
-                                documentId: widget.documetId,
-                                images: []);
-                        context.read<AddProductBloc>().add(event);
+                      // Show loading indicator
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        },
+                      );
 
-                        if (!mounted) return;
+                      await Future.delayed(const Duration(seconds: 2));
 
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                BottomNavigationPage(pageIndex: 2),
-                          ),
-                          (route) => false, // This removes all previous routes
-                        );
-                      } else {
-                        print('please select category');
-                      }
+                      if (!mounted) return;
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              BottomNavigationPage(pageIndex: 2),
+                        ),
+                        (route) => false,
+                      );
                     } else {
-                      print('please select image');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Please select a category')),
+                      );
                     }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            'Please fill all fields and add at least one image'),
+                      ),
+                    );
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -286,6 +338,209 @@ class _TestState extends State<EditProductPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildImageSection() {
+    return BlocConsumer<AddProductBloc, AddProductState>(
+      listener: (context, state) {
+        _handleImageSelected(state);
+      },
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Product Images',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              height: 120,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  width: 1.9,
+                  color: CustomColor.primaryColor,
+                ),
+              ),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: networkImages.length + newImages.length + 1,
+                itemBuilder: (context, index) {
+                  // Add image button at the end
+                  if (index == networkImages.length + newImages.length) {
+                    return GestureDetector(
+                      onTap: () {
+                        if (networkImages.length + newImages.length < 5) {
+                          context.read<AddProductBloc>().add(AddProductImage());
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Maximum 5 images allowed'),
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(
+                        width: 120,
+                        margin: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: CustomColor.primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.add_photo_alternate,
+                              size: 30,
+                              color: CustomColor.primaryColor,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Add Image (${networkImages.length + newImages.length}/5)',
+                              style: const TextStyle(
+                                color: CustomColor.primaryColor,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  // Show existing network images first
+                  if (index < networkImages.length) {
+                    return _buildImageItem(
+                      isNetwork: true,
+                      source: networkImages[index],
+                      index: index,
+                    );
+                  }
+
+                  // Show newly added images
+                  final newImageIndex = index - networkImages.length;
+                  return _buildImageItem(
+                    isNetwork: false,
+                    source: newImages[newImageIndex],
+                    index: index,
+                  );
+                },
+              ),
+            ),
+            if (networkImages.isEmpty && newImages.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Text(
+                  'Please add at least one image',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 241, 95, 84),
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            // Show image count
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                '${networkImages.length + newImages.length} of 5 images selected',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildImageItem({
+    required bool isNetwork,
+    required dynamic source,
+    required int index,
+  }) {
+    return Stack(
+      children: [
+        Container(
+          width: 120,
+          height: 120, // Add fixed height
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: CustomColor.primaryColor,
+              width: 1,
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: isNetwork
+                ? Image.network(
+                    source,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Center(
+                        child: Icon(Icons.error, color: Colors.red),
+                      );
+                    },
+                  )
+                : Image.file(
+                    source,
+                    fit: BoxFit.cover,
+                  ),
+          ),
+        ),
+        Positioned(
+          top: 4,
+          right: 4,
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                if (isNetwork) {
+                  networkImages.removeAt(index);
+                } else {
+                  newImages.removeAt(index - networkImages.length);
+                }
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.close,
+                size: 16,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

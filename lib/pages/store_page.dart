@@ -95,7 +95,8 @@ class _StorePageState extends State<StorePage> {
               itemBuilder: (context, index) {
                 final product = state.cycles![index];
 
-                return _ProductCard(
+                return ProductCard(
+                    //!
                     imagUrl: product['image_url'][0],
                     funtion: () {},
                     cycleName: product['name'],
@@ -131,14 +132,9 @@ class _StorePageState extends State<StorePage> {
                     },
                     editFuntion: () {
                       final documentId = product['documentId'];
-                      Cycles cycles = Cycles(
-                          brand: product['brand'],
-                          category: product['category'],
-                          description: product['description'],
-                          cycleName: product['name'],
-                          price: product['price'],
-                          fileImage: product['image_url'][0]);
+                      Cycles cycles = Cycles.fromMap(product);
 
+                      log('ssssssssssssssss');
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (ctx) {
                         return EditProductPage(
@@ -170,8 +166,8 @@ class _StorePageState extends State<StorePage> {
       builder: (ctx) {
         return AlertDialog(
           backgroundColor: CustomColor.primaryColor,
-          title: Center(
-              child: const Text(
+          title: const Center(
+              child: Text(
             'Confirm Deletion',
             style: TextStyle(
               fontSize: 22, // Larger font for emphasis
@@ -225,7 +221,7 @@ class _StorePageState extends State<StorePage> {
   }
 }
 
-Widget _ProductCard(
+Widget ProductCard(
     {required String imagUrl,
     required VoidCallback funtion,
     required String cycleName,

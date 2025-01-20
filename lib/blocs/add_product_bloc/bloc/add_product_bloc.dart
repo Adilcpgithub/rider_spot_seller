@@ -126,7 +126,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       }
 
       // Upload image and get URL (existing code)
-      final file = event.images;
+      final file = event.newImages;
       List<String> imageList = [];
       if (file.isNotEmpty) {
         for (int i = 0; i < file.length; i++) {
@@ -142,7 +142,8 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
           imageList.add(imageUrl);
         }
       }
-
+      //! here i am companing the existion network images and updatedimages from file
+      List<String> allImages = [...event.networkImages, ...imageList];
       // Add new product
       // await _firestore.collection('cycles').add({
       //   'name': event.name,
@@ -160,7 +161,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
         'price': event.price,
         'category': event.category,
         'description': event.description,
-        'image_url': imageList,
+        'image_url': allImages,
         'seller_id': userId,
         'created_at': FieldValue.serverTimestamp(),
       });
