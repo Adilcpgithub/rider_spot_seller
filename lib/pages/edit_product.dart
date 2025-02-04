@@ -43,7 +43,7 @@ class _TestState extends State<EditProductPage> {
   fetchData() {
     cycleNameController.text = widget.cycles.cycleName;
     brandController.text = widget.cycles.brand;
-    priceNameController.text = widget.cycles.price;
+    priceNameController.text = widget.cycles.price.toString();
     descriptionController.text = widget.cycles.description;
     networkImages = widget.cycles.images;
     category = widget.cycles.category;
@@ -56,7 +56,7 @@ class _TestState extends State<EditProductPage> {
 
   // Add this method to handle new image selection
   void _handleImageSelected(AddProductState state) {
-    if (state is ShowAddProductImage && state.fileImage != null) {
+    if (state is ShowAddProductImage) {
       setState(() {
         newImages.add(state.fileImage);
       });
@@ -166,86 +166,6 @@ class _TestState extends State<EditProductPage> {
                   category = value;
                 },
               ),
-              Container(
-                height: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    width: 1.9,
-                    color: CustomColor.primaryColor,
-                  ),
-                ),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: networkImages.length + newImages.length + 1,
-                  itemBuilder: (context, index) {
-                    // Add image button at the end
-                    if (index == networkImages.length + newImages.length) {
-                      return GestureDetector(
-                        onTap: () {
-                          if (networkImages.length + newImages.length < 5) {
-                            context
-                                .read<AddProductBloc>()
-                                .add(AddProductImage());
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Maximum 5 images allowed'),
-                              ),
-                            );
-                          }
-                        },
-                        child: Container(
-                          width: 120,
-                          margin: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: CustomColor.primaryColor,
-                              width: 1,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.add_photo_alternate,
-                                size: 30,
-                                color: CustomColor.primaryColor,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Add Image (${networkImages.length + newImages.length}/5)',
-                                style: const TextStyle(
-                                  color: CustomColor.primaryColor,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-
-                    // Show existing network images first
-                    if (index < networkImages.length) {
-                      return _buildImageItem(
-                        isNetwork: true,
-                        source: networkImages[index],
-                        index: index,
-                      );
-                    }
-
-                    // Show newly added images
-                    final newImageIndex = index - networkImages.length;
-                    return _buildImageItem(
-                      isNetwork: false,
-                      source: newImages[newImageIndex],
-                      index: index,
-                    );
-                  },
-                ),
-              ),
               const SizedBox(height: 16),
               _buildImageSection(),
               const SizedBox(height: 16),
@@ -279,7 +199,7 @@ class _TestState extends State<EditProductPage> {
                           SubmitCycleDetailsOnUpdateEvent(
                         name: cycleNameController.text,
                         brand: brandController.text,
-                        price: priceNameController.text,
+                        price: int.tryParse(priceNameController.text) ?? 100,
                         category: category!,
                         description: descriptionController.text,
                         documentId: widget.documetId,

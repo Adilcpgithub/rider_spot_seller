@@ -5,7 +5,7 @@ class Cycles {
   final String category;
   final String cycleName;
   final String brand;
-  final String price;
+  final int price;
   final String description;
 
   Cycles(

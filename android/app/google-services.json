@@ -1,48 +1,98 @@
 {
-    "project_info": {
-      "project_number": "544605270040",
-      "project_id": "nutranest-a6417",
-      "storage_bucket": "nutranest-a6417.firebasestorage.app"
-    },
-    "client": [
-      {
-        "client_info": {
-          "mobilesdk_app_id": "1:544605270040:android:6b04c483129ef4a1fc536d",
-          "android_client_info": {
-            "package_name": "com.example.nutra_nest"
-          }
-        },
-        "oauth_client": [],
-        "api_key": [
-          {
-            "current_key": "AIzaSyBVFagVJ8MXNIX7Tz8loAO0Qp-VdAMwYfc"
-          }
-        ],
-        "services": {
-          "appinvite_service": {
-            "other_platform_oauth_client": []
-          }
+  "project_info": {
+    "project_number": "544605270040",
+    "project_id": "nutranest-a6417",
+    "storage_bucket": "nutranest-a6417.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544605270040:android:6b04c483129ef4a1fc536d",
+        "android_client_info": {
+          "package_name": "com.example.nutra_nest"
         }
       },
-      {
-        "client_info": {
-          "mobilesdk_app_id": "1:544605270040:android:0a4d85f987f6d71efc536d",
-          "android_client_info": {
-            "package_name": "com.example.ride_spot"
+      "oauth_client": [
+        {
+          "client_id": "544605270040-sd138ffce35pa7345ulq4ftfrjsv3ocs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nutra_nest",
+            "certificate_hash": "9dd0d1f3db68fc6f5a2b95fd8f86ce10dd2747bb"
           }
         },
-        "oauth_client": [],
-        "api_key": [
-          {
-            "current_key": "AIzaSyBVFagVJ8MXNIX7Tz8loAO0Qp-VdAMwYfc"
-          }
-        ],
-        "services": {
-          "appinvite_service": {
-            "other_platform_oauth_client": []
-          }
+        {
+          "client_id": "544605270040-40ghkb5n4a0r0gcquqonatard20k9nqi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVFagVJ8MXNIX7Tz8loAO0Qp-VdAMwYfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544605270040-40ghkb5n4a0r0gcquqonatard20k9nqi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "544605270040-9nc4nh7jlv3sot65bu0806v6c9tb1j0c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nutraNest"
+              }
+            }
+          ]
         }
       }
-    ],
-    "configuration_version": "1"
-  }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544605270040:android:0a4d85f987f6d71efc536d",
+        "android_client_info": {
+          "package_name": "com.example.ride_spot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544605270040-gbrh6p2i5lveohsp86uu2j7btk00rehs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ride_spot",
+            "certificate_hash": "9dd0d1f3db68fc6f5a2b95fd8f86ce10dd2747bb"
+          }
+        },
+        {
+          "client_id": "544605270040-40ghkb5n4a0r0gcquqonatard20k9nqi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVFagVJ8MXNIX7Tz8loAO0Qp-VdAMwYfc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544605270040-40ghkb5n4a0r0gcquqonatard20k9nqi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "544605270040-9nc4nh7jlv3sot65bu0806v6c9tb1j0c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nutraNest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

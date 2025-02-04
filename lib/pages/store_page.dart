@@ -225,7 +225,7 @@ Widget ProductCard(
     {required String imagUrl,
     required VoidCallback funtion,
     required String cycleName,
-    required String price,
+    required int price,
     required VoidCallback deleteFunction,
     required VoidCallback editFuntion}) {
   return GestureDetector(
@@ -318,7 +318,7 @@ Widget ProductCard(
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      price, // Replace with actual price
+                      price.toString(), // Replace with actual price
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

@@ -12,7 +12,7 @@ class AddProductImage extends AddProductEvent {}
 class SubmitCycleDetailsEvent extends AddProductEvent {
   final String name;
   final String brand;
-  final String price;
+  final int price;
   final String category;
   final String description;
   final List<File> images;
@@ -32,7 +32,7 @@ class SubmitCycleDetailsEvent extends AddProductEvent {
 class SubmitCycleDetailsOnUpdateEvent extends AddProductEvent {
   final String name;
   final String brand;
-  final String price;
+  final int price;
   final String category;
   final String description;
   final String documentId;

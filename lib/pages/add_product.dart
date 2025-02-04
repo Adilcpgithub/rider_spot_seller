@@ -352,7 +352,7 @@ class _TestState extends State<AddProductPage> {
                       SubmitCycleDetailsEvent event = SubmitCycleDetailsEvent(
                           name: cycleNameController.text,
                           brand: brandController.text,
-                          price: priceNameController.text,
+                          price: int.tryParse(priceNameController.text) ?? 0,
                           category: category!,
                           description: descriptionController.text,
                           images: selectedImages);
