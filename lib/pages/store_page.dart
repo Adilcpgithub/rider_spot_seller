@@ -124,7 +124,8 @@ class _StorePageState extends State<StorePage> {
                             ),
                           );
 
-                          context.read<AddProductBloc>().add(GetProduct());
+                          if (context.mounted)
+                            context.read<AddProductBloc>().add(GetProduct());
                         }
                       } else {
                         log('Deletion cancelled');
@@ -149,7 +150,7 @@ class _StorePageState extends State<StorePage> {
             return const Center(child: Text('no data .'));
           } else if (state is AddImageLoading) {
             log('cycle is empty');
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else {
             return GestureDetector(
                 onTap: () => context.read<AddProductBloc>().add(GetProduct()),

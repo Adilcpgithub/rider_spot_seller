@@ -44,21 +44,25 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
 
 //! uplading image from gallery
   Future<File?> _uploadImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile?.path == null) {
-      return null;
-    }
-    if (pickedFile != null) {
-      finalImage = File(pickedFile.path);
-      print(pickedFile.path.toString());
-    } else {
-      return null;
-    }
+    try {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile?.path == null) {
+        return null;
+      }
+      if (pickedFile != null) {
+        finalImage = File(pickedFile.path);
+        print(pickedFile.path.toString());
+      } else {
+        return null;
+      }
 
-    File? imageFile = File(pickedFile.path);
-    return imageFile;
-    // return await uploadImageToFireStore(imageFile);
+      File? imageFile = File(pickedFile.path);
+      return imageFile;
+      // return await uploadImageToFireStore(imageFile);
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   Future<void> _onSubmitCyleDetails(
@@ -95,6 +99,13 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       }
 
       log('adding images to firebase ');
+      log(event.name);
+      log(event.brand);
+      log(event.price.toString());
+      log(event.category);
+      log(event.description);
+      log(userId);
+      log(event.name);
       // Add new product
       await _firestore.collection('cycles').add({
         'name': event.name,
@@ -110,6 +121,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       // Important: Fetch updated data immediately after adding
       await _getSellerProduct(GetProduct(), emit);
     } catch (e) {
+      log(e.toString());
       emit(AddProductFailure(e.toString()));
     }
   }
@@ -155,6 +167,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       //   'seller_id': userId,
       //   'created_at': FieldValue.serverTimestamp(),
       // });
+      log('message from adding 1');
       await _firestore.collection('cycles').doc(event.documentId).update({
         'name': event.name,
         'brand': event.brand,
@@ -165,10 +178,12 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
         'seller_id': userId,
         'created_at': FieldValue.serverTimestamp(),
       });
+      log('message from adding 2');
 
       // Important: Fetch updated data immediately after adding
       await _getSellerProduct(GetProduct(), emit);
     } catch (e) {
+      log('message from adding 3');
       emit(AddProductFailure(e.toString()));
     }
   }
