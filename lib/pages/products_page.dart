@@ -1,25 +1,23 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/auth/auth_serviece.dart';
 import 'package:ride_spot/auth/modal/product_modal.dart';
-
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/pages/edit_product.dart';
-import 'package:ride_spot/utility/colors.dart';
+import 'package:ride_spot/theme/custom_colors.dart';
 
-class StorePage extends StatefulWidget {
-  const StorePage({
+class ProductPage extends StatefulWidget {
+  const ProductPage({
     super.key,
   });
 
   @override
-  State<StorePage> createState() => _StorePageState();
+  State<ProductPage> createState() => _ProductPageState();
 }
 
-class _StorePageState extends State<StorePage> {
+class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
@@ -43,30 +41,6 @@ class _StorePageState extends State<StorePage> {
 
   Widget _buildProductsList() {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'My Products',
-          style: TextStyle(
-            fontSize: 22, // Larger font for emphasis
-            fontWeight: FontWeight.bold,
-            color: Colors.white, // Contrasts well with the gradient
-            shadows: [
-              Shadow(
-                offset: Offset(2, 2),
-                blurRadius: 3,
-                color: Colors.black26, // Subtle shadow for depth
-              ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(color: CustomColor.primaryColor),
-        ),
-        elevation: 4,
-        backgroundColor: Colors.blue,
-      ),
       body: BlocBuilder<AddProductBloc, AddProductState>(
         builder: (context, state) {
           if (state is ShowAllProduct && state.cycles!.isEmpty) {
@@ -74,7 +48,6 @@ class _StorePageState extends State<StorePage> {
 
             return GestureDetector(
                 onTap: () async {
-                  print('object');
                   fetchData();
                 },
                 child: const Center(child: Text('No products found.')));
@@ -95,7 +68,7 @@ class _StorePageState extends State<StorePage> {
               itemBuilder: (context, index) {
                 final product = state.cycles![index];
 
-                return ProductCard(
+                return productCard(
                     //!
                     imagUrl: product['image_url'][0],
                     funtion: () {},
@@ -117,15 +90,17 @@ class _StorePageState extends State<StorePage> {
 
                           await authService.deleteCycle(documentId);
                           log('Data deleted for documentId: $documentId');
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Your data has been removed'),
+                              ),
+                            );
+                          }
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Your data has been removed'),
-                            ),
-                          );
-
-                          if (context.mounted)
+                          if (context.mounted) {
                             context.read<AddProductBloc>().add(GetProduct());
+                          }
                         }
                       } else {
                         log('Deletion cancelled');
@@ -166,7 +141,7 @@ class _StorePageState extends State<StorePage> {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          backgroundColor: CustomColor.primaryColor,
+          backgroundColor: CustomColor.lightpurple,
           title: const Center(
               child: Text(
             'Confirm Deletion',
@@ -222,7 +197,7 @@ class _StorePageState extends State<StorePage> {
   }
 }
 
-Widget ProductCard(
+Widget productCard(
     {required String imagUrl,
     required VoidCallback funtion,
     required String cycleName,
@@ -239,15 +214,8 @@ Widget ProductCard(
       ),
       child: Container(
         decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 225, 221, 221),
           borderRadius: BorderRadius.circular(15),
-          gradient: const LinearGradient(
-            colors: [
-              Color.fromARGB(143, 74, 145, 226), // Light blue
-              Color.fromARGB(172, 0, 123, 255), //
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -289,7 +257,7 @@ Widget ProductCard(
                   //     ))
                   //   ],
                   // );
-                  return Center(
+                  return const Center(
                       child: Icon(
                     Icons.error,
                     color: Colors.red,
@@ -332,9 +300,7 @@ Widget ProductCard(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          print('ssss');
-                        },
+                        onTap: () {},
                         child: IconButton(
                           onPressed: deleteFunction,
                           icon: Container(

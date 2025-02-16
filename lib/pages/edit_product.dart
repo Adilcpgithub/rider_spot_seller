@@ -1,12 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/auth/modal/product_modal.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/pages/bottom_navigation_page.dart';
-import 'package:ride_spot/utility/colors.dart';
+import 'package:ride_spot/theme/custom_colors.dart';
 
 class EditProductPage extends StatefulWidget {
   final String documetId;
@@ -47,7 +45,6 @@ class _TestState extends State<EditProductPage> {
     descriptionController.text = widget.cycles.description;
     networkImages = widget.cycles.images;
     category = widget.cycles.category;
-    print('///    llllll   ${networkImages.length} hhhh ${newImages.length}');
   }
 
   dd() {
@@ -109,12 +106,12 @@ class _TestState extends State<EditProductPage> {
                 onChanged: (value) {
                   _formKey.currentState!.validate();
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Brand',
                   border: OutlineInputBorder(
                     borderSide:
-                        BorderSide(width: 18, color: CustomColor.primaryColor),
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        BorderSide(width: 18, color: CustomColor.lightpurple),
+                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                   ),
                 ),
               ),
@@ -130,7 +127,7 @@ class _TestState extends State<EditProductPage> {
                 onChanged: (value) {
                   _formKey.currentState!.validate();
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Price',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -226,7 +223,7 @@ class _TestState extends State<EditProductPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              BottomNavigationPage(pageIndex: 2),
+                              const BottomNavigationPage(pageIndex: 2),
                         ),
                         (route) => false,
                       );
@@ -284,7 +281,7 @@ class _TestState extends State<EditProductPage> {
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
                   width: 1.9,
-                  color: CustomColor.primaryColor,
+                  color: CustomColor.lightpurple,
                 ),
               ),
               child: ListView.builder(
@@ -311,23 +308,23 @@ class _TestState extends State<EditProductPage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
-                            color: CustomColor.primaryColor,
+                            color: CustomColor.lightpurple,
                             width: 1,
                           ),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.add_photo_alternate,
                               size: 30,
-                              color: CustomColor.primaryColor,
+                              color: CustomColor.lightpurple,
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'Add Image (${networkImages.length + newImages.length}/5)',
-                              style: const TextStyle(
-                                color: CustomColor.primaryColor,
+                              style: TextStyle(
+                                color: CustomColor.lightpurple,
                                 fontSize: 12,
                               ),
                             ),
@@ -398,7 +395,7 @@ class _TestState extends State<EditProductPage> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
-              color: CustomColor.primaryColor,
+              color: CustomColor.lightpurple,
               width: 1,
             ),
           ),

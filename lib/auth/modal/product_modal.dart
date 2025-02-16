@@ -22,6 +22,7 @@ class Cycles {
 
     if (map['image_url'] is List) {
       images = (map['image_url'] as List)
+          // ignore: prefer_iterable_wheretype
           .where((e) => e is String)
           .map((e) => e as String)
           .toList();

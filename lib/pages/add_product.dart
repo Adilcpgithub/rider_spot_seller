@@ -1,9 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/pages/bottom_navigation_page.dart';
-import 'package:ride_spot/utility/colors.dart';
+import 'package:ride_spot/theme/custom_colors.dart';
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({
@@ -44,30 +45,30 @@ class _TestState extends State<AddProductPage> {
 
   Widget _buildAddProductForm() {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Add Product',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            shadows: [
-              Shadow(
-                offset: Offset(2, 2),
-                blurRadius: 3,
-                color: Colors.black26,
-              ),
-            ],
-          ),
-        ),
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(),
-        ),
-        elevation: 4,
-        backgroundColor: Colors.blue,
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   title: const Text(
+      //     'Add Product',
+      //     style: TextStyle(
+      //       fontSize: 22,
+      //       fontWeight: FontWeight.bold,
+      //       color: Colors.white,
+      //       shadows: [
+      //         Shadow(
+      //           offset: Offset(2, 2),
+      //           blurRadius: 3,
+      //           color: Colors.black26,
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      //   centerTitle: true,
+      //   flexibleSpace: Container(
+      //     decoration: const BoxDecoration(),
+      //   ),
+      //   elevation: 4,
+      //   backgroundColor: Colors.blue,
+      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -105,12 +106,12 @@ class _TestState extends State<AddProductPage> {
                 onChanged: (value) {
                   _formKey.currentState!.validate();
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Brand',
                   border: OutlineInputBorder(
                     borderSide:
-                        BorderSide(width: 18, color: CustomColor.primaryColor),
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        BorderSide(width: 18, color: CustomColor.lightpurple),
+                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                   ),
                 ),
               ),
@@ -144,46 +145,47 @@ class _TestState extends State<AddProductPage> {
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                   ),
                 ),
-                items: const [
+                items: [
                   DropdownMenuItem(
                       value: 'Mountain Bike',
                       child: Text(
                         'Mountain Bike',
-                        style: TextStyle(color: CustomColor.primaryColor),
+                        style: TextStyle(color: CustomColor.lightpurple),
                       )),
                   DropdownMenuItem(
                       value: 'Road Bike',
                       child: Text(
                         'Road Bike',
-                        style: TextStyle(color: CustomColor.primaryColor),
+                        style: TextStyle(color: CustomColor.lightpurple),
                       )),
                   DropdownMenuItem(
                       value: 'Hybrid',
                       child: Text(
                         'Hybrid',
-                        style: TextStyle(color: CustomColor.primaryColor),
+                        style: TextStyle(color: CustomColor.lightpurple),
                       )),
                   DropdownMenuItem(
                       value: 'Electric Bikes',
                       child: Text(
                         'Electric Bikes',
-                        style: TextStyle(color: CustomColor.primaryColor),
+                        style: TextStyle(color: CustomColor.lightpurple),
                       )),
                   DropdownMenuItem(
                       value: "Kids' Bikes",
                       child: Text(
                         "Kids' Bikes",
-                        style: TextStyle(color: CustomColor.primaryColor),
+                        style: TextStyle(color: CustomColor.lightpurple),
                       )),
                   DropdownMenuItem(
                       value: 'Folding Bikes',
                       child: Text(
                         'Folding Bikes',
-                        style: TextStyle(color: CustomColor.primaryColor),
+                        style: TextStyle(color: CustomColor.lightpurple),
                       )),
                 ],
                 onChanged: (value) {
-                  print(value);
+                  log(value.toString());
+
                   category = value;
                 },
               ),
@@ -201,7 +203,7 @@ class _TestState extends State<AddProductPage> {
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
                             width: 1.9,
-                            color: CustomColor.primaryColor,
+                            color: CustomColor.lightpurple,
                           ),
                         ),
                         child: ListView.builder(
@@ -232,23 +234,23 @@ class _TestState extends State<AddProductPage> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
-                                      color: CustomColor.primaryColor,
+                                      color: CustomColor.lightpurple,
                                       width: 1,
                                     ),
                                   ),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.add_photo_alternate,
                                         size: 30,
-                                        color: CustomColor.primaryColor,
+                                        color: CustomColor.lightpurple,
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
                                         'Add Image (${selectedImages.length}/5)',
-                                        style: const TextStyle(
-                                          color: CustomColor.primaryColor,
+                                        style: TextStyle(
+                                          color: CustomColor.lightpurple,
                                           fontSize: 12,
                                         ),
                                       ),
@@ -267,7 +269,7 @@ class _TestState extends State<AddProductPage> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
-                                      color: CustomColor.primaryColor,
+                                      color: CustomColor.lightpurple,
                                       width: 1,
                                     ),
                                   ),
@@ -379,7 +381,7 @@ class _TestState extends State<AddProductPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              BottomNavigationPage(pageIndex: 2),
+                              const BottomNavigationPage(pageIndex: 2),
                         ),
                         (route) => false,
                       );
@@ -399,7 +401,7 @@ class _TestState extends State<AddProductPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: CustomColor.primaryColor,
+                  backgroundColor: CustomColor.lightpurple,
                   padding: const EdgeInsets.all(16),
                 ),
                 child: const Text(

@@ -1,15 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:meta/meta.dart';
-import 'package:ride_spot/auth/auth_serviece.dart';
+import 'package:ride_spot/core/shared_prefs.dart';
 
 part 'add_product_event.dart';
 part 'add_product_state.dart';
@@ -21,9 +18,9 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     on<GetProduct>(_getSellerProduct);
     on<SubmitCycleDetailsOnUpdateEvent>(_onUpdateSubmitCyleDetails);
   }
-  UserStatus userStatus = UserStatus();
+  AdminStatus userStatus = AdminStatus();
   File? finalImage;
-  final _auth = FirebaseAuth.instance;
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instanceFor(
       bucket: 'nutranest-a6417.firebasestorage.app');
@@ -52,7 +49,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       }
       if (pickedFile != null) {
         finalImage = File(pickedFile.path);
-        print(pickedFile.path.toString());
+        log(pickedFile.path.toString());
       } else {
         return null;
       }
@@ -63,32 +60,27 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     } catch (e) {
       log(e.toString());
     }
+    return null;
   }
 
   Future<void> _onSubmitCyleDetails(
       SubmitCycleDetailsEvent event, Emitter<AddProductState> emit) async {
     try {
-      UserStatus userStatus = UserStatus();
-      final userId = await userStatus.getSellerId();
-
-      if (userId.isEmpty) {
-        emit(const AddProductFailure('User ID is missing'));
-        return;
-      }
-
-      // Upload image and get URL (existing code)
+      const userId = AdminStatus.userId;
+      log('checking000');
       final file = event.images;
       log('file lenght  is ${file.length}');
+      log('checking111');
       List<String> imageList = [];
+
       if (file.isNotEmpty) {
         for (int i = 0; i < file.length; i++) {
           final uniqueImageName =
               DateTime.now().millisecondsSinceEpoch.toString();
           log('uploading image to firebase');
           log(' sssssssssssssssssssssss');
-          final ref = _storage
-              .ref()
-              .child('seller/$userId/$uniqueImageName/cycle_image.jpg');
+          final ref =
+              _storage.ref().child('admin/$uniqueImageName/cycle_image.jpg');
 
           final uploadTask = ref.putFile(file[i]);
           await uploadTask.whenComplete(() {});
@@ -128,45 +120,40 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
 
   Future<void> _onUpdateSubmitCyleDetails(SubmitCycleDetailsOnUpdateEvent event,
       Emitter<AddProductState> emit) async {
+    log('hhhhhhhhh');
     try {
-      UserStatus userStatus = UserStatus();
-      final userId = await userStatus.getSellerId();
+      const userId = AdminStatus.userId;
 
       if (userId.isEmpty) {
-        emit(AddProductFailure('User ID is missing'));
+        log('hhhhhhhhh empty');
+        emit(const AddProductFailure('User ID is missing'));
         return;
       }
-
+      log('hhhhhhhhhkkkkkkkkk');
       // Upload image and get URL (existing code)
       final file = event.newImages;
       List<String> imageList = [];
       if (file.isNotEmpty) {
+        log('checking000');
         for (int i = 0; i < file.length; i++) {
+          log('checking 11');
           final uniqueImageName =
               DateTime.now().millisecondsSinceEpoch.toString();
-          final ref = _storage
-              .ref()
-              .child('seller/$userId/$uniqueImageName/cycle_image.jpg');
-
+          final ref =
+              _storage.ref().child('admin/$uniqueImageName/cycle_image.jpg');
+          log('checking 22');
           final uploadTask = ref.putFile(file[i]);
+          log('checking 333');
           await uploadTask.whenComplete(() {});
+          log('checking 444');
           final imageUrl = await ref.getDownloadURL();
+          log('checking 555');
           imageList.add(imageUrl);
         }
       }
       //! here i am companing the existion network images and updatedimages from file
       List<String> allImages = [...event.networkImages, ...imageList];
-      // Add new product
-      // await _firestore.collection('cycles').add({
-      //   'name': event.name,
-      //   'brand': event.brand,
-      //   'price': event.price,
-      //   'category': event.category,
-      //   'description': event.description,
-      //   'image_url': imageUrl,
-      //   'seller_id': userId,
-      //   'created_at': FieldValue.serverTimestamp(),
-      // });
+
       log('message from adding 1');
       await _firestore.collection('cycles').doc(event.documentId).update({
         'name': event.name,
@@ -180,7 +167,6 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       });
       log('message from adding 2');
 
-      // Important: Fetch updated data immediately after adding
       await _getSellerProduct(GetProduct(), emit);
     } catch (e) {
       log('message from adding 3');
@@ -191,26 +177,16 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   Future<void> _getSellerProduct(
       GetProduct event, Emitter<AddProductState> emit) async {
     try {
-      UserStatus userStatus = UserStatus();
-      final userId = await userStatus.getSellerId();
-      print('cheking data ');
-      if (userId.isEmpty) {
-        emit(ShowAllProduct([]));
-        return;
-      }
-      print('user id is not empty user id is $userId');
+      // const userId = AdminStatus.userId;
 
       // Get products with ordering
-      final cyclesSnapshot = await _firestore
-          .collection('cycles')
-          .where('seller_id', isEqualTo: userId)
-          .get();
+      final cyclesSnapshot = await _firestore.collection('cycles').get();
 
       List<Map<String, dynamic>> cycles = cyclesSnapshot.docs.map((doc) {
         return {...doc.data(), 'documentId': doc.id};
       }).toList();
       log('cycles length is ${cycles.length}');
-      log('cycles length is ${cycles}');
+      log('cycles length is $cycles');
 
       emit(ShowAllProduct(cycles));
     } catch (e) {
@@ -219,5 +195,5 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     }
   }
 
-  _deletProduct(DeleteProduct event, Emitter<AddProductState> emit) {}
+  deletProduct(DeleteProduct event, Emitter<AddProductState> emit) {}
 }

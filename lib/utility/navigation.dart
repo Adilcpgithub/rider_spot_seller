@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CustomNavigation {
-  static Future navigationPush(
-    BuildContext context,
-    Widget myClass, {
-    Curve curve = Curves.easeInOut, // Optional curve parameter
-  }) {
-    return Navigator.of(context).push(
+  static push(BuildContext context, Widget destination) {
+    Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => myClass,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (context, animation, secondaryAnimation) => destination,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           var curvedAnimation = CurvedAnimation(
             parent: animation,
-            curve: curve,
+            curve: Curves.easeInOut,
           );
 
           return FadeTransition(
@@ -24,24 +21,44 @@ class CustomNavigation {
     );
   }
 
-  static Future navigationPushReplacement(
-    BuildContext context,
-    Widget myClass, {
-    Curve curve = Curves.easeInOut, // Optional curve parameter
-  }) {
-    {
-      return Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => myClass,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // For example, a fade transition
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          },
-        ),
-      );
-    }
+  static pushReplacement(BuildContext context, Widget destination) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (context, animation, secondaryAnimation) => destination,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var curvedAnimation = CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeInOut,
+          );
+
+          return FadeTransition(
+            opacity: curvedAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  static pushAndRemoveUntil(BuildContext context, Widget destination) {
+    Navigator.of(context).pushAndRemoveUntil(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (context, animation, secondaryAnimation) => destination,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var curvedAnimation = CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeInOut,
+          );
+
+          return FadeTransition(
+            opacity: curvedAnimation,
+            child: child,
+          );
+        },
+      ),
+      (route) => false,
+    );
   }
 }

@@ -9,6 +9,7 @@ sealed class AddProductState extends Equatable {
 
 final class AddProductInitial extends AddProductState {}
 
+// ignore: must_be_immutable
 class ShowAddProductImage extends AddProductState {
   File fileImage;
   ShowAddProductImage({required this.fileImage});

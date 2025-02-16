@@ -1,19 +1,15 @@
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/pages/home_page.dart';
 import 'package:ride_spot/pages/orders_page.dart';
+import 'package:ride_spot/pages/products_page.dart';
 import 'package:ride_spot/pages/settings_page.dart';
-import 'package:ride_spot/pages/add_product.dart';
-import 'package:ride_spot/pages/store_page.dart';
-import 'package:ride_spot/utility/colors.dart';
+import 'package:ride_spot/theme/custom_colors.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   final int pageIndex;
-  BottomNavigationPage({super.key, this.pageIndex = 0});
+  const BottomNavigationPage({super.key, this.pageIndex = 0});
 
   @override
   State<BottomNavigationPage> createState() => _BottomNavigationState();
@@ -29,17 +25,17 @@ class _BottomNavigationState extends State<BottomNavigationPage> {
 
   @override
   Widget build(BuildContext context) {
-    void _onItemTapped(int index) {
+    void onItemTapped(int index) {
       setState(() {
         _selectedIndex = index;
       });
     }
 
-    List<Widget> pages = [
+    List<Widget> pages = const [
       HomePage(),
       OrdersPage(),
-      StorePage(),
-      const SettingsPage()
+      ProductPage(),
+      SettingsPage()
     ];
     List<Color> color = [
       Colors.white,
@@ -53,8 +49,8 @@ class _BottomNavigationState extends State<BottomNavigationPage> {
       bottomNavigationBar: CurvedNavigationBar(
         index: _selectedIndex,
         animationDuration: const Duration(milliseconds: 500),
-        color: Color.fromARGB(255, 223, 223, 223),
-        onTap: (value) => _onItemTapped(value),
+        color: const Color.fromARGB(255, 223, 223, 223),
+        onTap: (value) => onItemTapped(value),
         backgroundColor: color[_selectedIndex],
         items: [
           CurvedNavigationBarItem(
@@ -62,63 +58,63 @@ class _BottomNavigationState extends State<BottomNavigationPage> {
                 Icons.home_outlined,
                 color: _selectedIndex == 0
                     ? Colors.white
-                    : CustomColor.primaryColor,
+                    : CustomColor.lightpurple,
               ),
               label: 'Home',
-              labelStyle: const TextStyle(color: CustomColor.primaryColor)),
+              labelStyle: TextStyle(color: CustomColor.lightpurple)),
           CurvedNavigationBarItem(
               child: Icon(
                 Icons.local_shipping_outlined,
                 color: _selectedIndex == 1
                     ? Colors.white
-                    : CustomColor.primaryColor,
+                    : CustomColor.lightpurple,
               ),
               label: 'Orders',
-              labelStyle: const TextStyle(color: CustomColor.primaryColor)),
+              labelStyle: TextStyle(color: CustomColor.lightpurple)),
           CurvedNavigationBarItem(
               child: Icon(
                 Icons.add_shopping_cart_outlined,
                 color: _selectedIndex == 2
                     ? Colors.white
-                    : CustomColor.primaryColor,
+                    : CustomColor.lightpurple,
               ),
               label: 'Store',
-              labelStyle: TextStyle(color: CustomColor.primaryColor)),
+              labelStyle: TextStyle(color: CustomColor.lightpurple)),
           CurvedNavigationBarItem(
               child: Icon(
                 Icons.settings,
                 color: _selectedIndex == 3
                     ? Colors.white
-                    : CustomColor.primaryColor,
+                    : CustomColor.lightpurple,
               ),
               label: 'Settings',
-              labelStyle: const TextStyle(color: CustomColor.primaryColor))
+              labelStyle: TextStyle(color: CustomColor.lightpurple))
         ],
-        buttonBackgroundColor: CustomColor.primaryColor,
+        buttonBackgroundColor: CustomColor.lightpurple,
       ),
     );
   }
 }
 
-void _showEditDialog(BuildContext context) {
+void showEditDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Edit Product'),
-        content: SingleChildScrollView(
+        content: const SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Product Name',
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Price',
                   border: OutlineInputBorder(),
                   prefixText: '₹ ',
@@ -145,7 +141,7 @@ void _showEditDialog(BuildContext context) {
   );
 }
 
-void _showDeleteConfirmation(BuildContext context) {
+void showDeleteConfirmation(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
