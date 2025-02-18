@@ -99,7 +99,7 @@ class DashboardPageWidgets {
           width: double.maxFinite,
           height: 430,
           decoration: BoxDecoration(
-            color: const Color.fromARGB(195, 103, 79, 163),
+            color: const Color.fromARGB(255, 222, 220, 220),
             borderRadius: BorderRadius.circular(15),
           ),
           child: SingleChildScrollView(

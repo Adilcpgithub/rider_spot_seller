@@ -16,7 +16,7 @@ showModelDeletingRule(BuildContext context) async {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               border: Border.all(width: 0.5, color: Colors.grey),
-              color: Colors.black87,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -27,7 +27,7 @@ showModelDeletingRule(BuildContext context) async {
                   'Confirmation!',
                   style: TextStyle(
                     decorationThickness: 0,
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 20,
                   ),
                 ),
@@ -42,7 +42,7 @@ showModelDeletingRule(BuildContext context) async {
                       Flexible(
                         child: SmallTextbutton(
                           width: 1.5,
-                          textColor: Colors.white,
+                          textColor: Colors.black,
                           buttomName: 'cancel',
                           fontweight: 16,
                           voidCallBack: () {
@@ -56,7 +56,7 @@ showModelDeletingRule(BuildContext context) async {
                       Flexible(
                         child: SmallTextbutton(
                           width: 1.5,
-                          textColor: Colors.white,
+                          textColor: Colors.black,
                           buttomName: 'logout',
                           fontweight: 16,
                           voidCallBack: () async {

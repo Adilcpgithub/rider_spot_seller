@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ride_spot/core/shared_prefs.dart';
-import 'package:ride_spot/features/settings/presentation/widgets/logout_show_dialog.dart';
 
 class AdminDrawer extends StatelessWidget {
   final Function(int) onItemSelected;

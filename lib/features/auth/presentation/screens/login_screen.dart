@@ -6,7 +6,7 @@ import 'package:ride_spot/auth/auth_serviece.dart';
 import 'package:ride_spot/features/auth/presentation/blocs/bloc_login/login_bloc.dart';
 import 'package:ride_spot/features/auth/presentation/widgets/custom_text_button.dart';
 import 'package:ride_spot/features/auth/presentation/widgets/custom_textfield.dart';
-import 'package:ride_spot/features/dashboard/presentation/page/drawer_controll_page.dart';
+import 'package:ride_spot/features/dashboard/presentation/screens/drawer_controll_page.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 import 'package:ride_spot/utility/app_logo.dart';
 import 'package:ride_spot/utility/custom_scaffol_message.dart';

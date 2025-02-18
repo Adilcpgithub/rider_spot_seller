@@ -15,8 +15,8 @@ class SmallTextbutton extends StatelessWidget {
     this.borderColor,
     required this.buttomName,
     required this.voidCallBack,
-    this.buttomColor = Colors.black,
-    this.textColor = Colors.white,
+    this.buttomColor = Colors.white,
+    this.textColor = Colors.black,
     this.width = 0,
     this.fontweight = 12,
   });

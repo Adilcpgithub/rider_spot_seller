@@ -2,7 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/features/auth/presentation/screens/login_screen.dart';
-import 'package:ride_spot/features/dashboard/presentation/page/drawer_controll_page.dart';
+import 'package:ride_spot/features/dashboard/presentation/screens/drawer_controll_page.dart';
 import 'package:ride_spot/features/splash/presentation/blocs/cubit/splash_cubit.dart';
 import 'package:ride_spot/utility/app_logo.dart';
 import 'package:ride_spot/utility/navigation.dart';
