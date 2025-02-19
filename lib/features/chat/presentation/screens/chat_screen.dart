@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:ride_spot/core/shared_prefs.dart';
+import 'package:ride_spot/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -20,11 +22,14 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> sendMessage() async {
+  Future<void> sendMessage(BuildContext context) async {
     if (_messageController.text.isEmpty) return;
-
+    String message = _messageController.text;
     String senderId = AdminStatus.userId;
 
+    _messageController.clear();
+
+    log('sss');
     await _db
         .collection("chats")
         .doc(widget.receiverId)
@@ -32,11 +37,12 @@ class _ChatScreenState extends State<ChatScreen> {
         .add({
       "senderId": senderId,
       "receiverId": widget.receiverId,
-      "message": _messageController.text,
+      "message": message,
       "timestamp": FieldValue.serverTimestamp(),
     });
-
-    _messageController.clear();
+    context
+        .read<ChatBloc>()
+        .add(FetchLastMessageTime(userId: widget.receiverId));
   }
 
   @override
@@ -153,7 +159,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Icons.send,
                     color: CustomColor.lightpurple,
                   ),
-                  onPressed: sendMessage,
+                  onPressed: () => sendMessage(context),
                 ),
               ],
             ),

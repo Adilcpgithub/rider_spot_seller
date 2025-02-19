@@ -17,3 +17,12 @@ class FetchUserDetailsEvent extends ChatEvent {
   @override
   List<Object> get props => [userIds];
 }
+
+class FetchLastMessageTime extends ChatEvent {
+  final String userId;
+
+  const FetchLastMessageTime({required this.userId});
+
+  @override
+  List<Object> get props => [userId];
+}

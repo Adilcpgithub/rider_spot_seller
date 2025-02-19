@@ -95,121 +95,145 @@ class _OrderCardState extends State<OrderCard> {
                   ),
                 ),
                 _buildStatusDropdown(),
-              ],
-            ),
-          ),
-          ListTile(
-            title: const Text("Order Details",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            trailing: Icon(
-              _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-              color: Colors.blue,
-            ),
-            onTap: () {
-              setState(() {
-                _isExpanded = !_isExpanded; // Toggle expansion
-              });
-            },
-          ),
-          !_isExpanded
-              ? ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: widget.order.items.length,
-                  itemBuilder: (context, index) {
-                    final item = widget.order.items[index];
-                    return ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          item.imageUrl,
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 60,
-                              height: 60,
-                              color: Colors.grey[200],
-                              child: const Icon(Icons.image_not_supported),
-                            );
-                          },
-                        ),
-                      ),
-                      title: Text(
-                        item.name,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      subtitle: Text(
-                        '${item.quantity}x ₹${item.price}',
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                      trailing: Text(
-                        '₹${item.quantity * item.price}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    );
+                //
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                    });
                   },
-                )
-              : const SizedBox(),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Order Date',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    Text(
-                      DateFormat('MMM dd, yyyy').format(widget.order.orderDate),
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total Amount',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    Text(
-                      '₹${widget.order.totalAmount}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Color(0xFF674fa3),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to order details
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF674fa3),
-                    minimumSize: const Size(double.infinity, 45),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                  child: Icon(
+                    _isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    color: Colors.blue,
                   ),
-                  child: const Text('View Details'),
                 ),
               ],
             ),
           ),
+
+          ///!!!
+          _isExpanded ? dddd() : SizedBox.shrink()
         ],
       ),
+    );
+  }
+
+  dddd() {
+    return Column(
+      children: [
+        ListTile(
+          title: const Text("Order Details",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          trailing: Icon(
+            _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            color: Colors.blue,
+          ),
+          onTap: () {
+            setState(() {
+              _isExpanded = !_isExpanded; // Toggle expansion
+            });
+          },
+        ),
+        !_isExpanded
+            ? ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.order.items.length,
+                itemBuilder: (context, index) {
+                  final item = widget.order.items[index];
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        item.imageUrl,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: 60,
+                            height: 60,
+                            color: Colors.grey[200],
+                            child: const Icon(Icons.image_not_supported),
+                          );
+                        },
+                      ),
+                    ),
+                    title: Text(
+                      item.name,
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    subtitle: Text(
+                      '${item.quantity}x ₹${item.price}',
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                    trailing: Text(
+                      '₹${item.quantity * item.price}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  );
+                },
+              )
+            : const SizedBox(),
+        const Divider(),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Order Date',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  Text(
+                    DateFormat('MMM dd, yyyy').format(widget.order.orderDate),
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total Amount',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  Text(
+                    '₹${widget.order.totalAmount}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Color(0xFF674fa3),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to order details
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF674fa3),
+                  minimumSize: const Size(double.infinity, 45),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text('View Details'),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

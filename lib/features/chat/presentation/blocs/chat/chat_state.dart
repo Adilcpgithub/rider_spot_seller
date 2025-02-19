@@ -28,3 +28,13 @@ class ChatError extends ChatState {
   @override
   List<Object> get props => [message];
 }
+
+//this state will show last message
+class LastMessageLoaded extends ChatState {
+  final String lastMessageTime;
+
+  const LastMessageLoaded({required this.lastMessageTime});
+
+  @override
+  List<Object> get props => [lastMessageTime];
+}

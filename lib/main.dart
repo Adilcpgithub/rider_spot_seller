@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/features/auth/presentation/blocs/bloc_login/login_bloc.dart';
+import 'package:ride_spot/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:ride_spot/features/splash/presentation/blocs/cubit/splash_cubit.dart';
 import 'package:ride_spot/features/splash/presentation/screens/splash_screen.dart';
 import 'package:ride_spot/theme/light_theme.dart';
@@ -34,6 +35,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => AddProductBloc()),
         BlocProvider(create: (context) => LoginBloc()),
         BlocProvider(create: (context) => SplashCubit()..isLoged()),
+        BlocProvider(create: (context) => ChatBloc()),
       ],
       child: MaterialApp(
         theme: lightTheme,

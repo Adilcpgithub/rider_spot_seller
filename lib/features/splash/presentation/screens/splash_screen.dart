@@ -14,7 +14,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<SplashCubit, SplashState>(
       listener: (context, state) async {
-        await Future.delayed(const Duration(seconds: 3));
+        await Future.delayed(const Duration(milliseconds: 1500));
         if (state is AdminLogInResult && state.isLogin) {
           if (context.mounted) {
             CustomNavigation.pushAndRemoveUntil(context, const AdminHomePage());

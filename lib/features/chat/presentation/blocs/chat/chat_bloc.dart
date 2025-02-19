@@ -1,9 +1,10 @@
 // ignore: depend_on_referenced_packages
 import 'dart:developer';
-
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
@@ -13,6 +14,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc() : super(ChatInitial()) {
     on<FetchChatUserIdsEvent>(fetchChatUserIdsEvent);
     on<FetchUserDetailsEvent>(fetchUserDetailsEvent);
+    on<FetchLastMessageTime>(_onFetchLastMessageTime);
   }
   fetchChatUserIdsEvent(
       FetchChatUserIdsEvent event, Emitter<ChatState> emit) async {
@@ -82,6 +84,35 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     } catch (e) {
       log(e.toString());
       emit(ChatError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onFetchLastMessageTime(
+      FetchLastMessageTime event, Emitter<ChatState> emit) async {
+    emit(ChatLoading());
+
+    try {
+      String chatId = event.userId;
+
+      var snapshot = await _db
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('timestamp', descending: true)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        Timestamp lastMessageTime = snapshot.docs.first['timestamp'];
+        String formattedTime =
+            DateFormat('h:mm a').format(lastMessageTime.toDate());
+
+        emit(LastMessageLoaded(lastMessageTime: formattedTime));
+      } else {
+        emit(LastMessageLoaded(lastMessageTime: "No messages"));
+      }
+    } catch (e) {
+      emit(ChatError(message: "Error fetching last message time: $e"));
     }
   }
 }
