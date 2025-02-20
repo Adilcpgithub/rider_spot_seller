@@ -114,7 +114,7 @@ class _OrderCardState extends State<OrderCard> {
           ),
 
           ///!!!
-          _isExpanded ? dddd() : SizedBox.shrink()
+          _isExpanded ? dddd() : const SizedBox.shrink()
         ],
       ),
     );

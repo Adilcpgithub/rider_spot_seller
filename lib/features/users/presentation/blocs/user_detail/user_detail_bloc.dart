@@ -30,5 +30,9 @@ class UserDetailBloc extends Bloc<UserDetailEvent, UserDetailState> {
         emit(UserDetailError(message: e.toString()));
       }
     });
+    on<AddressToggleEvent>((event, emit) {
+      emit(ShowAddressDetail(
+          showAddress: event.showAddress, haveAddress: event.haveAddress));
+    });
   }
 }

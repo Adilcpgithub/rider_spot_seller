@@ -6,7 +6,7 @@ void showUpdateNotification({
   required String message,
   int? milliseconds,
   Color? color = Colors.green,
-  IconData icon = Icons.check_circle,
+  IconData? icon,
 }) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(

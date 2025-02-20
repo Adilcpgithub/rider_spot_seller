@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:ride_spot/features/users/presentation/blocs/user_detail/user_detail_bloc.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 
-class UserDetailScreen extends StatelessWidget {
+class UserDetailScreen extends StatefulWidget {
   final String userId;
 
   const UserDetailScreen({super.key, required this.userId});
 
+  @override
+  State<UserDetailScreen> createState() => _UserDetailScreenState();
+}
+
+class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +27,10 @@ class UserDetailScreen extends StatelessWidget {
         backgroundColor: CustomColor.lightpurple,
       ),
       body: FutureBuilder<DocumentSnapshot>(
-        future:
-            FirebaseFirestore.instance.collection('users').doc(userId).get(),
+        future: FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.userId)
+            .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -36,7 +45,9 @@ class UserDetailScreen extends StatelessWidget {
           }
 
           var user = snapshot.data!.data() as Map<String, dynamic>;
-
+          context.read<UserDetailBloc>().add(AddressToggleEvent(
+              showAddress: user['addresses'] != null ? true : false,
+              haveAddress: user['addresses'] != null));
           return Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Column(
@@ -88,32 +99,139 @@ class UserDetailScreen extends StatelessWidget {
                     )),
                 const SizedBox(height: 10),
                 // Phone
-                Text("Phone: ${user['phone'] ?? 'Not provided'}",
+                Text("Phone: ${user['phoneNumber'] ?? 'Not provided'}",
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     )),
-                const SizedBox(height: 10),
-                // Address
-                Text("Address: ${user['address'] ?? 'Not available'}",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    )),
-                const SizedBox(height: 10),
-                // Date of Birth
 
-                // Date Joined
-                Text("Date Joined: ${user['createdAt']?.toDate() ?? 'Unknown'}",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    )),
-                const SizedBox(height: 20),
-                // Add any other relevant information here
+                //! Address
+                Row(
+                  children: [
+                    Text(
+                      "Address: ${user['addresses'] != null ? '' : 'Not provided'}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      //Icons.keyboard_arrow_up : Icons.keyboard_arrow_down
+                    ),
+                    BlocBuilder<UserDetailBloc, UserDetailState>(
+                      builder: (context, state) {
+                        bool showAddress;
+                        bool haveAddress;
+                        if (state is ShowAddressDetail &&
+                            state.showAddress == true) {
+                          showAddress = true;
+                        } else {
+                          showAddress = false;
+                        }
+                        if (state is ShowAddressDetail &&
+                            state.haveAddress == true) {
+                          haveAddress = true;
+                        } else {
+                          haveAddress = false;
+                        }
+
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: IconButton(
+                                onPressed: () {
+                                  context.read<UserDetailBloc>().add(
+                                      AddressToggleEvent(
+                                          haveAddress: haveAddress,
+                                          showAddress: !showAddress));
+                                },
+                                icon: haveAddress
+                                    ? Icon(
+                                        showAddress == true
+                                            ? Icons.keyboard_arrow_down
+                                            : Icons.keyboard_arrow_up,
+                                        color: Colors.blue,
+                                      )
+                                    : const SizedBox.shrink(),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        );
+                      },
+                    )
+                  ],
+                ),
+                BlocBuilder<UserDetailBloc, UserDetailState>(
+                  builder: (context, state) {
+                    if (user["addresses"] != null &&
+                        user["addresses"] is List &&
+                        user["addresses"].isNotEmpty) {
+                      if (state is ShowAddressDetail && state.showAddress) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (user["addresses"][0]["houseName"] != null)
+                                Text(
+                                  "Housename: ${user["addresses"][0]["houseName"]}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              if (user["addresses"][0]["postOffice"] != null)
+                                Text(
+                                  "Postoffice: ${user["addresses"][0]["postOffice"]}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              if (user["addresses"][0]["pinCode"] != null)
+                                Text(
+                                  "Pincode: ${user["addresses"][0]["pinCode"]}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              if (user["addresses"][0]["district"] != null)
+                                Text(
+                                  "District: ${user["addresses"][0]["district"]}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    //  color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              if (user["addresses"][0]["state"] != null)
+                                Text(
+                                  "State: ${user["addresses"][0]["state"]}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           );

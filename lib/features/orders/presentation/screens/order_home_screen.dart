@@ -17,7 +17,7 @@ class OrderHomeScreen extends StatelessWidget {
               title: "All Orders",
               count: 50, // Example count
               icon: Icons.list_alt,
-              color: CustomColor.lightpurple,
+              color: Colors.orange,
               onTap: () {
                 CustomNavigation.push(context, const OrderScreen());
               },
@@ -27,7 +27,7 @@ class OrderHomeScreen extends StatelessWidget {
               title: "Delivered Orders",
               count: 30,
               icon: Icons.check_circle,
-              color: CustomColor.lightpurple,
+              color: Colors.green,
               onTap: () {
                 CustomNavigation.push(context, const OrderScreen());
               },
@@ -37,7 +37,7 @@ class OrderHomeScreen extends StatelessWidget {
               title: "Cancelled Orders",
               count: 5,
               icon: Icons.cancel,
-              color: CustomColor.lightpurple,
+              color: Colors.red,
               onTap: () {
                 CustomNavigation.push(context, const OrderScreen());
               },

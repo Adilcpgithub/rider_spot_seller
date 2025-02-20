@@ -109,7 +109,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
         emit(LastMessageLoaded(lastMessageTime: formattedTime));
       } else {
-        emit(LastMessageLoaded(lastMessageTime: "No messages"));
+        emit(const LastMessageLoaded(lastMessageTime: "No messages"));
       }
     } catch (e) {
       emit(ChatError(message: "Error fetching last message time: $e"));

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ride_spot/utility/app_logo.dart';
 
-class ChatHomeWidgets {
+class UserScreenWigets {
   static showProfileDialog(BuildContext context, String imageUrl) {
     return showDialog(
         context: context,

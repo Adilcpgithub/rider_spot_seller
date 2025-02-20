@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ride_spot/features/categories/presentation/screens/categories_home_screen.dart';
 import 'package:ride_spot/features/chat/presentation/screens/chat_list_home_screen.dart';
 import 'package:ride_spot/features/dashboard/presentation/screens/dash_board_page.dart';
 import 'package:ride_spot/features/dashboard/presentation/widget/drawer.dart';
 import 'package:ride_spot/features/orders/presentation/screens/order_home_screen.dart';
-import 'package:ride_spot/features/orders/presentation/screens/order_screen.dart';
 import 'package:ride_spot/features/settings/presentation/screens/settings_screen.dart';
 import 'package:ride_spot/features/users/presentation/screens/user_list_screen.dart';
-import 'package:ride_spot/pages/products_page.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 
 class AdminHomePage extends StatefulWidget {
@@ -22,16 +21,17 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   final List<Widget> _pages = [
     const DashboardPage(),
-    OrderHomeScreen(),
-    const ProductPage(),
+    const CategoriesHomeScreen(),
+    // const ProductPage(),
+    const OrderHomeScreen(),
     const UserListScreen(),
     const ChatHomeScreen(),
     const SettingScreen(),
   ];
   final List<String> titile = [
     'Dashboard',
+    'Categories',
     'Orders',
-    'Products',
     'Users',
     'Chat',
     'Settings',

@@ -12,7 +12,7 @@ class DashboardPageWidgets {
       height: 130,
       decoration: BoxDecoration(
         color: containerColor,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,14 +1,10 @@
 import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:ride_spot/features/chat/presentation/blocs/chat/chat_bloc.dart';
+import 'package:ride_spot/features/chat/presentation/repositories/chat_repositorie.dart';
 import 'package:ride_spot/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ride_spot/features/chat/presentation/widgets/chat_home_widgets.dart';
-import 'package:ride_spot/theme/custom_colors.dart';
-import 'package:ride_spot/utility/app_logo.dart';
-import 'package:ride_spot/utility/custom_scaffol_message.dart';
 import 'package:ride_spot/utility/navigation.dart';
 
 class ChatHomeScreen extends StatelessWidget {
@@ -68,16 +64,8 @@ class ChatHomeScreen extends StatelessWidget {
                           },
                           leading: GestureDetector(
                             onTap: () {
-                              if (user['profileImage'] != null) {
-                                ChatHomeWidgets.showProfileDialog(
-                                    context, user['profileImage']);
-                              } else {
-                                showUpdateNotification(
-                                    color: CustomColor.lightpurple,
-                                    icon: Icons.account_circle,
-                                    context: context,
-                                    message: "no profile image available");
-                              }
+                              ChatHomeWidgets.showProfileDialog(
+                                  context, user['profileImage'] ?? '');
                             },
                             child: CircleAvatar(
                               radius: 25,
@@ -100,26 +88,26 @@ class ChatHomeScreen extends StatelessWidget {
                           ),
                           subtitle: Text(user["email"] ?? 'No email'),
                           trailing: StreamBuilder<String>(
-                            stream: lastMessageTimeStream(
-                                user['id']), // Pass the user ID to the stream
+                            stream: ChatRepositorie.lastMessageTimeStream(
+                                user['id']),
+                            // Pass the user ID to the stream
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return const Text("Loading...",
-                                    style: TextStyle(color: Colors.grey));
-                              } else if (snapshot.hasError) {
-                                return const Text("Error",
-                                    style: TextStyle(color: Colors.red));
+                                    style: TextStyle(
+                                        fontSize: 11, color: Colors.grey));
                               } else if (snapshot.hasData) {
                                 return Text(
                                   snapshot.data!,
                                   style: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 11,
                                       fontWeight: FontWeight.w500),
                                 );
                               }
                               return const Text("No messages",
-                                  style: TextStyle(color: Colors.grey));
+                                  style: TextStyle(
+                                      fontSize: 11, color: Colors.grey));
                             },
                           ),
                         ));
@@ -135,21 +123,4 @@ class ChatHomeScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Stream<String> lastMessageTimeStream(String userId) {
-  return FirebaseFirestore.instance
-      .collection('chats')
-      .doc(userId)
-      .collection('messages')
-      .orderBy('timestamp', descending: true)
-      .limit(1)
-      .snapshots()
-      .map((snapshot) {
-    if (snapshot.docs.isNotEmpty) {
-      Timestamp lastMessageTime = snapshot.docs.first['timestamp'];
-      return DateFormat('h:mm a').format(lastMessageTime.toDate());
-    }
-    return 'No messages';
-  });
 }

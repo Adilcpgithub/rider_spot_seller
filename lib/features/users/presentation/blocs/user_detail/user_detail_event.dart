@@ -8,3 +8,12 @@ abstract class UserDetailEvent extends Equatable {
 }
 
 class FetchUsersEvent extends UserDetailEvent {}
+
+class AddressToggleEvent extends UserDetailEvent {
+  final bool haveAddress;
+  final bool showAddress;
+  const AddressToggleEvent(
+      {required this.showAddress, required this.haveAddress});
+  @override
+  List<Object> get props => [haveAddress, showAddress];
+}

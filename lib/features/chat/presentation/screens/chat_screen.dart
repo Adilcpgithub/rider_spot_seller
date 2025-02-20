@@ -15,6 +15,7 @@ class ChatScreen extends StatefulWidget {
       {super.key, required this.receiverId, required this.recieverName});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ChatScreenState createState() => _ChatScreenState();
 }
 
@@ -40,6 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
       "message": message,
       "timestamp": FieldValue.serverTimestamp(),
     });
+    // ignore: use_build_context_synchronously
     context
         .read<ChatBloc>()
         .add(FetchLastMessageTime(userId: widget.receiverId));

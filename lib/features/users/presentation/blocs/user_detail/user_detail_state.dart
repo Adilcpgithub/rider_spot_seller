@@ -26,3 +26,13 @@ class UserDetailError extends UserDetailState {
   @override
   List<Object> get props => [message];
 }
+
+class ShowAddressDetail extends UserDetailState {
+  final bool haveAddress;
+  final bool showAddress;
+
+  const ShowAddressDetail(
+      {required this.showAddress, required this.haveAddress});
+  @override
+  List<Object> get props => [showAddress, haveAddress];
+}

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/features/users/presentation/blocs/user_detail/user_detail_bloc.dart';
 import 'package:ride_spot/features/users/presentation/screens/user_datails_screen.dart';
-import 'package:ride_spot/theme/custom_colors.dart';
-import 'package:ride_spot/utility/app_logo.dart';
+import 'package:ride_spot/features/users/presentation/widgets/user_screen_wigets.dart';
 import 'package:ride_spot/utility/navigation.dart';
 
 class UserListScreen extends StatelessWidget {
@@ -51,21 +50,27 @@ class UserListScreen extends StatelessWidget {
                                 userId: user['documentId'] ?? '',
                               ));
                         },
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor:
-                                Colors.white, // Placeholder background color
-                            backgroundImage: user['profileImage'] != null
-                                ? NetworkImage(user['profileImage'])
-                                : null,
+                        leading: GestureDetector(
+                          onTap: () {
+                            UserScreenWigets.showProfileDialog(
+                                context, user['profileImage'] ?? '');
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(25),
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor:
+                                  Colors.white, // Placeholder background color
+                              backgroundImage: user['profileImage'] != null
+                                  ? NetworkImage(user['profileImage'])
+                                  : null,
 
-                            child: user['profileImage'] == null
-                                ? const Icon(Icons.person_rounded,
-                                    size: 33,
-                                    color: Colors.black45) // Fallback icon
-                                : null,
+                              child: user['profileImage'] == null
+                                  ? const Icon(Icons.person_rounded,
+                                      size: 33,
+                                      color: Colors.black45) // Fallback icon
+                                  : null,
+                            ),
                           ),
                         ),
                         title: Text(
