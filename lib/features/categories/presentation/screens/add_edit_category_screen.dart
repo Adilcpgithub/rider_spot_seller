@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ride_spot/features/categories/presentation/blocs/add_category/category_bloc.dart';
+import 'package:ride_spot/features/categories/presentation/screens/categories_list_screen.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 import 'package:ride_spot/utility/custom_scaffol_message.dart';
+import 'package:ride_spot/utility/navigation.dart';
 
 class AddCategoryScreen extends StatefulWidget {
-  const AddCategoryScreen({super.key});
+  final String? categoryId; // If null -> Add mode, Else -> Edit mode
+  final String? initialName;
+  final String? initialImageUrl;
+  const AddCategoryScreen(
+      {super.key, this.categoryId, this.initialName, this.initialImageUrl});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -16,41 +22,38 @@ class AddCategoryScreen extends StatefulWidget {
 
 class _AddCategoryScreenState extends State<AddCategoryScreen> {
   final TextEditingController _categoryController = TextEditingController();
-  File? _imageFile;
+  File? _selectedImageFile;
   final ImagePicker _picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
+  String? _imageUrl;
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile.path);
+        _selectedImageFile = File(pickedFile.path);
       });
     }
   }
 
-  void clearFields() {
-    setState(() {
-      _formKey.currentState?.reset(); // Reset form state
-      _categoryController.clear(); // Clear text field
-      _imageFile = null; // Clear image
-    });
-  }
-
   void submitCategory() async {
     if (_formKey.currentState?.validate() ?? false) {
-      if (_imageFile != null) {
-        _categoryController.clear();
-        BlocProvider.of<CategoryBloc>(context).add(
-          AddCategoryEvent(
-            categoryName: _categoryController.text,
-            imageFile: _imageFile,
-          ),
-        );
+      if (_selectedImageFile != null || _imageUrl != null) {
+        final categoryEvent = widget.categoryId == null
+            ? AddCategoryEvent(
+                categoryName: _categoryController.text,
+                imageFile: _selectedImageFile)
+            : UpdateCategoryEvent(
+                categoryId: widget.categoryId!,
+                categoryName: _categoryController.text,
+                imageFile: _selectedImageFile,
+                imageUrl: _imageUrl);
+
+        BlocProvider.of<CategoryBloc>(context).add(categoryEvent);
       } else {
         showUpdateNotification(
             context: context,
-            message: 'Please select  image',
+            message: 'Please select an image',
             color: Colors.green[400]);
       }
     } else {
@@ -62,12 +65,23 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
   }
 
   @override
+  void initState() {
+    if (widget.categoryId != null) {
+      // Edit Mode: Pre-fill Data
+      _categoryController.text = widget.initialName ?? '';
+      _imageUrl = widget.initialImageUrl;
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isEditMode = widget.categoryId != null;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Add New Category",
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          isEditMode ? "Edit Category" : "Add New Category",
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: CustomColor.lightpurple,
       ),
@@ -91,6 +105,9 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter category name';
                     }
+                    if (value.length > 14) {
+                      return 'Name is too long';
+                    }
                     if (value.trim().length < 3) {
                       return 'Name must be at least 3 characters long';
                     }
@@ -108,22 +125,24 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                 ),
               ),
               const SizedBox(height: 60),
-              const Text("UPLOAD IMAGE",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold)),
+              const Text(
+                "UPLOAD IMAGE",
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 30),
               Align(
                 alignment: Alignment.center,
                 child: GestureDetector(
                   onTap: _pickImage,
-                  child: _imageFile != null
+                  child: _selectedImageFile != null
                       ? Stack(children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.file(_imageFile!,
-                                height: 250, width: 250, fit: BoxFit.cover),
+                            child: Image.file(_selectedImageFile!,
+                                height: 180, width: 200, fit: BoxFit.cover),
                           ),
                           Positioned(
                               top: 5,
@@ -131,7 +150,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                               child: IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      _imageFile = null;
+                                      _selectedImageFile = null;
                                     });
                                   },
                                   icon: const Icon(
@@ -140,20 +159,30 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                                     size: 25,
                                   )))
                         ])
-                      : Container(
-                          height: 250,
-                          width: 250,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                              child: Icon(
-                            Icons.add_a_photo,
-                            size: 55,
-                            color: CustomColor.lightpurple,
-                          )),
-                        ),
+                      : _imageUrl != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                _imageUrl!,
+                                height: 180,
+                                width: 200,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Container(
+                              height: 180,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                  child: Icon(
+                                Icons.add_a_photo,
+                                size: 55,
+                                color: CustomColor.lightpurple,
+                              )),
+                            ),
                 ),
               ),
               const SizedBox(height: 50),
@@ -162,15 +191,19 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   if (state is CategoryAlreadExist) {
                     showUpdateNotification(
                         context: context,
-                        message: 'already exists!!',
+                        message: 'Category is existing!',
                         color: Colors.green);
-                  } else if (state is CategoryAddedSuccess) {
+                  } else if (state is CategoryAddedSuccess ||
+                      state is CategoryUpdatedSuccess) {
                     showUpdateNotification(
                         context: context,
-                        message: 'Category added successfully!',
+                        message: isEditMode
+                            ? 'Category updated successfully!'
+                            : 'Category added successfully!',
                         color: Colors.green);
-                    clearFields();
-                    Navigator.of(context).pop();
+
+                    CustomNavigation.pushReplacement(
+                        context, const CategoriesListScreen());
                   } else if (state is CategoryAddedFailure) {
                     showUpdateNotification(
                         context: context,
@@ -181,23 +214,31 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                 builder: (context, state) {
                   return Align(
                     alignment: Alignment.center,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            CustomColor.lightpurple, // Change button color
-                        foregroundColor: Colors.white, // Change text color
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 13),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(8), // Rounded corners
+                    child: SizedBox(
+                      height: 45,
+                      width: 150,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              CustomColor.lightpurple, // Change button color
+                          foregroundColor: Colors.white, // Change text color
+
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8), // Rounded corners
+                          ),
                         ),
+                        onPressed:
+                            state is CategoryLoading ? null : submitCategory,
+                        child: state is CategoryLoading
+                            ? const SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: CircularProgressIndicator(
+                                    color: Colors.white),
+                              )
+                            : Text(isEditMode ? "UPDATE" : "UPLOAD"),
                       ),
-                      onPressed:
-                          state is CategoryLoading ? null : submitCategory,
-                      child: state is CategoryLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text("UPLOAD"),
                     ),
                   );
                 },

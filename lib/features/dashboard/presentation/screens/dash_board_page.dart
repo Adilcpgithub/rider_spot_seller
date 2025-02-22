@@ -21,12 +21,12 @@ class DashboardPage extends StatelessWidget {
               Row(
                 children: [
                   DashboardPageWidgets.dashInfoContainer(
-                      containerColor: Colors.purple[100]!,
+                      containerColor: CustomColor.lightpurple,
                       infoName: 'Orders',
                       infoCount: 27),
                   const Expanded(child: SizedBox()),
                   DashboardPageWidgets.dashInfoContainer(
-                      containerColor: const Color.fromARGB(39, 255, 17, 0),
+                      containerColor: CustomColor.lightpurple,
                       infoName: 'Pending',
                       infoCount: 16),
                 ],

@@ -39,7 +39,10 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => SplashCubit()..isLoged()),
         BlocProvider(create: (context) => ChatBloc()),
         BlocProvider(create: (context) => UserDetailBloc()),
-        BlocProvider(create: (context) => CategoryBloc()),
+        BlocProvider(
+            create: (context) => CategoryBloc()..add(LoadCategories())),
+
+        //CategoryBloc
       ],
       child: MaterialApp(
         theme: lightTheme,

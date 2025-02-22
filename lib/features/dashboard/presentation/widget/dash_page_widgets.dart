@@ -21,7 +21,7 @@ class DashboardPageWidgets {
             infoName,
             style: TextStyle(
                 fontSize: 20,
-                color: textColor ?? Colors.black,
+                color: textColor ?? Colors.white,
                 fontWeight: FontWeight.w500),
           ),
           const SizedBox(
@@ -31,7 +31,7 @@ class DashboardPageWidgets {
             infoCount.toString(),
             style: TextStyle(
                 fontSize: 20,
-                color: textColor ?? Colors.black,
+                color: textColor ?? Colors.white,
                 fontWeight: FontWeight.w500),
           ),
         ],

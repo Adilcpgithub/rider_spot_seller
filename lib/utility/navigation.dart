@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomNavigation {
   static push(BuildContext context, Widget destination) {
-    Navigator.of(context).push(
+    return Navigator.of(context).push(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 200),
         pageBuilder: (context, animation, secondaryAnimation) => destination,

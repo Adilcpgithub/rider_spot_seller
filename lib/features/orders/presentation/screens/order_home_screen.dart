@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ride_spot/features/orders/presentation/screens/order_screen.dart';
-import 'package:ride_spot/theme/custom_colors.dart';
 import 'package:ride_spot/utility/navigation.dart';
 
 class OrderHomeScreen extends StatelessWidget {
