@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
+import 'package:ride_spot/features/categories/presentation/screens/products_list_screen.dart';
 import 'package:ride_spot/pages/bottom_navigation_page.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
+import 'package:ride_spot/utility/navigation.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({
-    super.key,
-  });
+  final String categoryName;
+  const AddProductPage({super.key, required this.categoryName});
 
   @override
   State<AddProductPage> createState() => _TestState();
@@ -17,7 +18,7 @@ class AddProductPage extends StatefulWidget {
 
 class _TestState extends State<AddProductPage> {
   final _formKey = GlobalKey<FormState>();
-  String? category = '';
+
   List<File> selectedImages = [];
   TextEditingController cycleNameController = TextEditingController();
   TextEditingController brandController = TextEditingController();
@@ -35,40 +36,20 @@ class _TestState extends State<AddProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "Add ${widget.categoryName}",
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: CustomColor.lightpurple,
+      ),
       body: _buildAddProductForm(),
     );
   }
 
-  dd() {
-    context.read<AddProductBloc>().add(GetProduct());
-  }
-
   Widget _buildAddProductForm() {
     return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   title: const Text(
-      //     'Add Product',
-      //     style: TextStyle(
-      //       fontSize: 22,
-      //       fontWeight: FontWeight.bold,
-      //       color: Colors.white,
-      //       shadows: [
-      //         Shadow(
-      //           offset: Offset(2, 2),
-      //           blurRadius: 3,
-      //           color: Colors.black26,
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      //   flexibleSpace: Container(
-      //     decoration: const BoxDecoration(),
-      //   ),
-      //   elevation: 4,
-      //   backgroundColor: Colors.blue,
-      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -137,58 +118,6 @@ class _TestState extends State<AddProductPage> {
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                //validator: (value) {return},
-                decoration: const InputDecoration(
-                  labelText: 'Category',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  ),
-                ),
-                items: [
-                  DropdownMenuItem(
-                      value: 'Mountain Bike',
-                      child: Text(
-                        'Mountain Bike',
-                        style: TextStyle(color: CustomColor.lightpurple),
-                      )),
-                  DropdownMenuItem(
-                      value: 'Road Bike',
-                      child: Text(
-                        'Road Bike',
-                        style: TextStyle(color: CustomColor.lightpurple),
-                      )),
-                  DropdownMenuItem(
-                      value: 'Hybrid',
-                      child: Text(
-                        'Hybrid',
-                        style: TextStyle(color: CustomColor.lightpurple),
-                      )),
-                  DropdownMenuItem(
-                      value: 'Electric Bikes',
-                      child: Text(
-                        'Electric Bikes',
-                        style: TextStyle(color: CustomColor.lightpurple),
-                      )),
-                  DropdownMenuItem(
-                      value: "Kids' Bikes",
-                      child: Text(
-                        "Kids' Bikes",
-                        style: TextStyle(color: CustomColor.lightpurple),
-                      )),
-                  DropdownMenuItem(
-                      value: 'Folding Bikes',
-                      child: Text(
-                        'Folding Bikes',
-                        style: TextStyle(color: CustomColor.lightpurple),
-                      )),
-                ],
-                onChanged: (value) {
-                  log(value.toString());
-
-                  category = value;
-                },
-              ),
               const SizedBox(height: 16),
               BlocConsumer<AddProductBloc, AddProductState>(
                 listener: (context, state) {
@@ -313,9 +242,9 @@ class _TestState extends State<AddProductPage> {
                         const Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Please add at least one image',
+                            'Add at least one image',
                             style: TextStyle(
-                              color: Color.fromARGB(255, 241, 95, 84),
+                              color: Colors.black,
                               fontSize: 12,
                             ),
                           ),
@@ -350,47 +279,37 @@ class _TestState extends State<AddProductPage> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate() &&
                       selectedImages.isNotEmpty) {
-                    if (category!.isNotEmpty) {
-                      SubmitCycleDetailsEvent event = SubmitCycleDetailsEvent(
-                          name: cycleNameController.text,
-                          brand: brandController.text,
-                          price: int.tryParse(priceNameController.text) ?? 0,
-                          category: category!,
-                          description: descriptionController.text,
-                          images: selectedImages);
-                      context.read<AddProductBloc>().add(event);
+                    SubmitCycleDetailsEvent event = SubmitCycleDetailsEvent(
+                        name: cycleNameController.text,
+                        brand: brandController.text,
+                        price: int.tryParse(priceNameController.text) ?? 0,
+                        category: widget.categoryName,
+                        description: descriptionController.text,
+                        images: selectedImages);
+                    context.read<AddProductBloc>().add(event);
 
-                      // Show loading indicator
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      );
+                    // Show loading indicator
 
-                      // Wait for images to upload
-                      await Future.delayed(const Duration(seconds: 2));
+                    // Wait for images to upload
+                    // await Future.delayed(const Duration(seconds: 2));
 
-                      if (!mounted) return;
-
-                      // Navigate back
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const BottomNavigationPage(pageIndex: 2),
-                        ),
-                        (route) => false,
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Please select a category')),
-                      );
-                    }
+                    // Navigate back
+                    // Navigator.of(context).pop();
+                    log(' data added  ');
+                    Navigator.of(context).pop();
+                    // CustomNavigation.pushReplacement(
+                    //     context,
+                    //     ProductPage(
+                    //       categoryName: widget.categoryName,
+                    //     ));
+                    // Navigator.pushAndRemoveUntil(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) =>
+                    //         const BottomNavigationPage(pageIndex: 2),
+                    //   ),
+                    //   (route) => false,
+                    // );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

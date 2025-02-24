@@ -34,9 +34,12 @@ class UpdateCategoryEvent extends CategoryEvent {
 
 class DeleteCategory extends CategoryEvent {
   final String categoryId;
-  DeleteCategory(this.categoryId);
+  final String categoryName;
+  DeleteCategory({required this.categoryId, required this.categoryName});
   @override
   List<Object?> get props => [categoryId];
 }
 
-class LoadCategories extends CategoryEvent {}
+class LoadCategories extends CategoryEvent {
+  LoadCategories();
+}

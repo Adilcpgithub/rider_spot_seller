@@ -17,6 +17,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     on<SubmitCycleDetailsEvent>(_onSubmitCyleDetails);
     on<GetProduct>(_getSellerProduct);
     on<SubmitCycleDetailsOnUpdateEvent>(_onUpdateSubmitCyleDetails);
+    on<DeleteProduct>(deletProduct);
   }
   AdminStatus userStatus = AdminStatus();
   File? finalImage;
@@ -111,7 +112,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       });
 
       // Important: Fetch updated data immediately after adding
-      await _getSellerProduct(GetProduct(), emit);
+      await _getSellerProduct(GetProduct(category: event.category), emit);
     } catch (e) {
       log(e.toString());
       emit(AddProductFailure(e.toString()));
@@ -167,7 +168,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       });
       log('message from adding 2');
 
-      await _getSellerProduct(GetProduct(), emit);
+      await _getSellerProduct(GetProduct(category: event.category), emit);
     } catch (e) {
       log('message from adding 3');
       emit(AddProductFailure(e.toString()));
@@ -177,13 +178,24 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   Future<void> _getSellerProduct(
       GetProduct event, Emitter<AddProductState> emit) async {
     try {
+      emit(AddProductLoading());
       // const userId = AdminStatus.userId;
 
       // Get products with ordering
-      final cyclesSnapshot = await _firestore.collection('cycles').get();
+      final QuerySnapshot cyclesSnapshot;
+      if (event.category != null) {
+        log('category is not null');
+        cyclesSnapshot = await _firestore
+            .collection('cycles')
+            .where('category', isEqualTo: event.category!)
+            .get();
+      } else {
+        log('category is not null');
+        cyclesSnapshot = await _firestore.collection('cycles').get();
+      }
 
       List<Map<String, dynamic>> cycles = cyclesSnapshot.docs.map((doc) {
-        return {...doc.data(), 'documentId': doc.id};
+        return {...doc.data() as Map<String, dynamic>, 'documentId': doc.id};
       }).toList();
       log('cycles length is ${cycles.length}');
       log('cycles length is $cycles');
@@ -195,5 +207,17 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     }
   }
 
-  deletProduct(DeleteProduct event, Emitter<AddProductState> emit) {}
+  deletProduct(DeleteProduct event, Emitter<AddProductState> emit) {
+    if (state is ShowAllProduct) {
+      final currentState = state as ShowAllProduct;
+      if (currentState.cycles!.isNotEmpty) {
+        List<Map<String, dynamic>> updatedcycles =
+            List.from(currentState.cycles!);
+        updatedcycles.removeWhere(
+          (category) => category['documentId'] == event.productId,
+        );
+        emit(ShowAllProduct(updatedcycles));
+      }
+    }
+  }
 }

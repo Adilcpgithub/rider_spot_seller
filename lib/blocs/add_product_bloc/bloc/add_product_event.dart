@@ -60,6 +60,16 @@ class SubmitCycleDetailsOnUpdateEvent extends AddProductEvent {
       ];
 }
 
-class GetProduct extends AddProductEvent {}
+class GetProduct extends AddProductEvent {
+  final String? category;
+  const GetProduct({this.category});
+}
 
-class DeleteProduct extends AddProductEvent {}
+// ignore: must_be_immutable
+class DeleteProduct extends AddProductEvent {
+  String productId;
+  DeleteProduct(this.productId);
+
+  @override
+  List<Object?> get props => [productId];
+}

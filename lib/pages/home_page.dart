@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ride_spot/pages/add_product.dart';
+import 'package:ride_spot/features/categories/presentation/screens/add_product_screen.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,9 +14,9 @@ class HomePage extends StatelessWidget {
         child: FloatingActionButton(
           backgroundColor: Colors.grey[300],
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-              return const AddProductPage();
-            }));
+            // Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+            //   return const AddProductPage();
+            // }));
           },
           child: Icon(
             Icons.add,

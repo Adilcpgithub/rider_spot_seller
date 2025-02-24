@@ -121,7 +121,17 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         );
         emit(CategoryLoaded(updatedcategories));
         await categoryRepository.deleteCategory(event.categoryId);
-        //  add(LoadCategories()); // Reload categories after deletion
+        // Delete cycles that belong to this category
+        final cycleDocs = await FirebaseFirestore.instance
+            .collection('cycles')
+            .where('category', isEqualTo: event.categoryName)
+            .get();
+        for (var doc in cycleDocs.docs) {
+          await FirebaseFirestore.instance
+              .collection('cycles')
+              .doc(doc.id)
+              .delete();
+        }
       }
     });
   }

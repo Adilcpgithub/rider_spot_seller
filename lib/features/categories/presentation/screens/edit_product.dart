@@ -9,8 +9,12 @@ import 'package:ride_spot/theme/custom_colors.dart';
 class EditProductPage extends StatefulWidget {
   final String documetId;
   final Cycles cycles;
+  final String category;
   const EditProductPage(
-      {super.key, required this.documetId, required this.cycles});
+      {super.key,
+      required this.documetId,
+      required this.cycles,
+      required this.category});
 
   @override
   State<EditProductPage> createState() => _TestState();
@@ -63,11 +67,13 @@ class _TestState extends State<EditProductPage> {
   Widget _buildAddProductForm() {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-            child: Text(
-          'Edit Cycle',
+        centerTitle: true,
+        backgroundColor: CustomColor.lightpurple,
+        title: Text(
+          'Edit ${widget.category}',
+          style: const TextStyle(color: Colors.white),
           textAlign: TextAlign.center,
-        )),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -137,32 +143,6 @@ class _TestState extends State<EditProductPage> {
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: category,
-                //validator: (value) {return},
-                decoration: const InputDecoration(
-                  labelText: 'Category',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  ),
-                ),
-                items: const [
-                  DropdownMenuItem(
-                      value: 'Mountain Bike', child: Text('Mountain Bike')),
-                  DropdownMenuItem(
-                      value: 'Road Bike', child: Text('Road Bike')),
-                  DropdownMenuItem(value: 'Hybrid', child: Text('Hybrid')),
-                  DropdownMenuItem(
-                      value: 'Electric Bikes', child: Text('Electric Bikes')),
-                  DropdownMenuItem(
-                      value: "Kids' Bikes", child: Text("Kids' Bikes")),
-                  DropdownMenuItem(
-                      value: 'Folding Bikes', child: Text('Folding Bikes')),
-                ],
-                onChanged: (value) {
-                  category = value;
-                },
-              ),
               const SizedBox(height: 16),
               _buildImageSection(),
               const SizedBox(height: 16),
@@ -206,27 +186,8 @@ class _TestState extends State<EditProductPage> {
                       context.read<AddProductBloc>().add(event);
 
                       // Show loading indicator
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        },
-                      );
 
-                      await Future.delayed(const Duration(seconds: 2));
-
-                      if (!mounted) return;
-
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const BottomNavigationPage(pageIndex: 2),
-                        ),
-                        (route) => false,
-                      );
+                      Navigator.pop(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -243,7 +204,7 @@ class _TestState extends State<EditProductPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: CustomColor.lightpurple,
                   padding: const EdgeInsets.all(16),
                 ),
                 child: const Text(

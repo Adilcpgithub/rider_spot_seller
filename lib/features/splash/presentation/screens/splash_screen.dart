@@ -18,8 +18,6 @@ class SplashScreen extends StatelessWidget {
         if (state is AdminLogInResult && state.isLogin) {
           if (context.mounted) {
             CustomNavigation.pushAndRemoveUntil(context, const AdminHomePage());
-
-            //BottomNavigationPage()
           }
         } else {
           if (context.mounted) {
@@ -27,19 +25,35 @@ class SplashScreen extends StatelessWidget {
           }
         }
       },
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FadeInLeft(
-                  child: Image.asset(
-                appLogo(),
-                height: deviceHeight(context) / 3,
-              ))
-            ],
-          ))),
+      child: Stack(children: [
+        Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FadeInLeft(
+                    child: Image.asset(
+                  appLogo(),
+                  height: deviceHeight(context) / 3,
+                ))
+              ],
+            ))),
+        Positioned(
+            bottom: deviceHeight(context) / 2 - 90,
+            left: deviceWidth(context) / 2 - 100,
+            child: FadeInUp(
+              delay: const Duration(seconds: 1),
+              child: const Text(
+                'Rider Spot Admin',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    decorationThickness: 0),
+              ),
+            ))
+      ]),
     );
   }
 }

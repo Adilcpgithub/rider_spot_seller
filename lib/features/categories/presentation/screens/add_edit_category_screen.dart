@@ -79,6 +79,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
     final isEditMode = widget.categoryId != null;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           isEditMode ? "Edit Category" : "Add New Category",
           style: const TextStyle(color: Colors.white),

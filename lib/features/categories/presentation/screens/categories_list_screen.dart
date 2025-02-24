@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/features/categories/presentation/blocs/add_category/category_bloc.dart';
 import 'package:ride_spot/features/categories/presentation/widgets/categories_list_widget.dart';
+import 'package:ride_spot/theme/custom_colors.dart';
 
 class CategoriesListScreen extends StatefulWidget {
   const CategoriesListScreen({super.key});
@@ -23,11 +24,12 @@ class _CategoriesListScreenState extends State<CategoriesListScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(
           "All Categories",
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: CustomColor.lightpurple,
       ),
       body: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (context, state) {

@@ -5,6 +5,8 @@ import 'package:ride_spot/features/categories/data/models/category_model.dart';
 import 'package:ride_spot/features/categories/presentation/blocs/add_category/category_bloc.dart';
 import 'package:ride_spot/features/categories/presentation/screens/add_edit_category_screen.dart';
 import 'package:ride_spot/features/dashboard/presentation/widget/small_text_button.dart';
+import 'package:ride_spot/features/categories/presentation/screens/add_product_screen.dart';
+import 'package:ride_spot/features/categories/presentation/screens/products_list_screen.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 import 'package:ride_spot/utility/app_logo.dart';
 import 'package:ride_spot/utility/navigation.dart';
@@ -70,171 +72,187 @@ class CategoriesListWidget {
   //! category container
   static Widget buildCategoryContainer(
       BuildContext context, CategoryModel category) {
-    return Card(
-        elevation: 7,
-        //color: Colors.purple[100],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        margin: const EdgeInsets.symmetric(
-            vertical: 8), // Add spacing between items
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-                width: 0.5, color: CustomColor.lightpurple.withOpacity(0.9)),
-            color: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        CustomNavigation.push(
+            context,
+            ProductPage(
+              categoryName: category.name,
+            ));
+      },
+      child: Card(
+          elevation: 7,
+          //color: Colors.purple[100],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          height: 120,
-          width: double.maxFinite,
-          child: Row(
-            children: [
-              const SizedBox(width: 12),
-              GestureDetector(
-                onTap: () {
-                  CategoriesListWidget.showProfileDialog(
-                      context: context,
-                      imageUrl: category.imageUrl,
-                      isDefaulImage: !category.isEditable,
-                      categoryName: category.name);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
+          margin: const EdgeInsets.symmetric(
+              vertical: 8), // Add spacing between items
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                  width: 0.5, color: CustomColor.lightpurple.withOpacity(0.9)),
+              color: Colors.white,
+            ),
+            height: 120,
+            width: double.maxFinite,
+            child: Row(
+              children: [
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: () {
+                    CategoriesListWidget.showProfileDialog(
+                        context: context,
+                        imageUrl: category.imageUrl,
+                        isDefaulImage: !category.isEditable,
+                        categoryName: category.name);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(image: AssetImage(appLogo()))),
+                    height: 100,
+                    width: 100,
+                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(image: AssetImage(appLogo()))),
-                  height: 100,
-                  width: 100,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: category.isEditable
-                        ? Image.network(
-                            category.imageUrl,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return SizedBox(
+                      child: category.isEditable
+                          ? Image.network(
+                              category.imageUrl,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return SizedBox(
+                                    height: 100,
+                                    width: 100,
+                                    child: Image.asset(appLogo()));
+                              },
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return const SizedBox(
                                   height: 100,
                                   width: 100,
-                                  child: Image.asset(appLogo()));
-                            },
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              }
-                              return const SizedBox(
-                                height: 100,
-                                width: 100,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            },
-                          )
-                        : Image.asset(
-                            category.imageUrl,
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.scaleDown,
-                          ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-
-              //?Category Name
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => CategoriesListWidget.showProfileDialog(
-                      context: context,
-                      imageUrl: category.imageUrl,
-                      isDefaulImage: !category.isEditable,
-                      categoryName: category.name),
-                  child: Text(
-                    category.name,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              },
+                            )
+                          : Image.asset(
+                              category.imageUrl,
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.scaleDown,
+                            ),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              ),
-              const Expanded(child: SizedBox()),
+                const SizedBox(width: 20),
 
-              category.isEditable
-                  ? PopupMenuButton<String>(
-                      color: CustomColor.lightpurple.withOpacity(0.9),
-                      onSelected: (value) async {
-                        if (value == 'edit') {
-                          log('onpressed pressed');
-                          await CustomNavigation.push(
-                              context,
-                              AddCategoryScreen(
-                                categoryId: category.id,
-                                initialName: category.name,
-                                initialImageUrl: category.imageUrl,
-                              ));
-                          log('after navigation  method start right now');
-                          //  Navigator.of(context).pop();
-                          //? this will call the  reload method again to fetch the data
-                          // ignore: use_build_context_synchronously
-                          context.read<CategoryBloc>().add(LoadCategories());
-                        } else if (value == 'delete') {
-                          showModelDeleteCategory(context, category.id);
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.more_vert,
+                //?Category Name
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => CategoriesListWidget.showProfileDialog(
+                        context: context,
+                        imageUrl: category.imageUrl,
+                        isDefaulImage: !category.isEditable,
+                        categoryName: category.name),
+                    child: Text(
+                      category.name,
+                      style: const TextStyle(
                         color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(
-                            value: 'edit',
-                            child: Row(
-                              children: [
-                                Icon(Icons.edit, color: Colors.green),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Edit',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            )),
-                        const PopupMenuItem(
-                            value: 'delete',
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete, color: Colors.red),
-                                SizedBox(width: 8),
-                                Text('Delete',
-                                    style: TextStyle(color: Colors.white))
-                              ],
-                            ))
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-              IconButton(
-                icon: const Icon(
-                  Icons.chevron_right,
-                  color: Colors.black,
-                  size: 23,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  // Handle action
-                },
-              ),
-              const SizedBox(width: 10),
-            ],
-          ),
-        ));
+                const Expanded(child: SizedBox()),
+
+                category.isEditable
+                    ? PopupMenuButton<String>(
+                        color: CustomColor.lightpurple.withOpacity(0.9),
+                        onSelected: (value) async {
+                          if (value == 'edit') {
+                            log('onpressed pressed');
+                            await CustomNavigation.push(
+                                context,
+                                AddCategoryScreen(
+                                  categoryId: category.id,
+                                  initialName: category.name,
+                                  initialImageUrl: category.imageUrl,
+                                ));
+                            log('after navigation  method start right now');
+                            //  Navigator.of(context).pop();
+                            //? this will call the  reload method again to fetch the data
+                            // ignore: use_build_context_synchronously
+                            context.read<CategoryBloc>().add(LoadCategories());
+                          } else if (value == 'delete') {
+                            showModelDeleteCategory(
+                                context, category.id, category.name);
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.more_vert,
+                          color: Colors.black,
+                        ),
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(
+                              value: 'edit',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.edit, color: Colors.green),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Edit',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              )),
+                          const PopupMenuItem(
+                              value: 'delete',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.delete, color: Colors.red),
+                                  SizedBox(width: 8),
+                                  Text('Delete',
+                                      style: TextStyle(color: Colors.white))
+                                ],
+                              ))
+                        ],
+                      )
+                    : const SizedBox.shrink(),
+                IconButton(
+                  icon: const Icon(
+                    Icons.chevron_right,
+                    color: Colors.black,
+                    size: 23,
+                  ),
+                  onPressed: () {
+                    CustomNavigation.push(
+                        context,
+                        AddProductPage(
+                          categoryName: category.name,
+                        ));
+                    // Handle action
+                  },
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
+          )),
+    );
   }
 
   //! Show dialog for Delete category
   static showModelDeleteCategory(
-      BuildContext context, String categoryId) async {
+      BuildContext context, String categoryId, String categoryName) async {
     showDialog<bool>(
         context: context,
         builder: (BuildContext context) {
@@ -269,7 +287,7 @@ class CategoriesListWidget {
                       children: [
                         Flexible(
                           child: SmallTextbutton(
-                            width: 1.5,
+                            width: 0.5,
                             textColor: Colors.black,
                             buttomName: 'Cancel',
                             fontweight: 16,
@@ -283,14 +301,14 @@ class CategoriesListWidget {
                         ),
                         Flexible(
                           child: SmallTextbutton(
-                            width: 1.5,
+                            width: 0.5,
                             textColor: Colors.black,
                             buttomName: 'Ok',
                             fontweight: 16,
                             voidCallBack: () async {
-                              context
-                                  .read<CategoryBloc>()
-                                  .add(DeleteCategory(categoryId));
+                              context.read<CategoryBloc>().add(DeleteCategory(
+                                  categoryId: categoryId,
+                                  categoryName: categoryName));
                               Navigator.pop(context);
                             },
                           ),
