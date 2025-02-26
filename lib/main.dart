@@ -5,6 +5,8 @@ import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
 import 'package:ride_spot/features/auth/presentation/blocs/bloc_login/login_bloc.dart';
 import 'package:ride_spot/features/categories/presentation/blocs/add_category/category_bloc.dart';
 import 'package:ride_spot/features/chat/presentation/blocs/chat/chat_bloc.dart';
+import 'package:ride_spot/features/orders/presentation/screens/updated_order/blocs/admin_order_bloc/admin_order_bloc.dart';
+import 'package:ride_spot/features/orders/presentation/screens/updated_order/data/repository/order_repository.dart';
 import 'package:ride_spot/features/splash/presentation/blocs/cubit/splash_cubit.dart';
 import 'package:ride_spot/features/splash/presentation/screens/splash_screen.dart';
 import 'package:ride_spot/features/users/presentation/blocs/user_detail/user_detail_bloc.dart';
@@ -41,8 +43,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => UserDetailBloc()),
         BlocProvider(
             create: (context) => CategoryBloc()..add(LoadCategories())),
-
-        //CategoryBloc
+        BlocProvider(
+            create: (context) =>
+                AdminOrderBloc(orderRepository: OrderRepository())),
       ],
       child: MaterialApp(
         theme: lightTheme,

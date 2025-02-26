@@ -16,7 +16,7 @@ class DashboardPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 20,
+                height: 40,
               ),
               Row(
                 children: [
@@ -31,18 +31,19 @@ class DashboardPage extends StatelessWidget {
                       infoCount: 16),
                 ],
               ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                width: double.infinity,
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: LineChartSample2(),
-                ),
-              ),
+              //! cha
+              // Container(
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(15),
+              //   ),
+              //   width: double.infinity,
+              //   child: const Padding(
+              //     padding: EdgeInsets.only(left: 15),
+              //     child: LineChartSample2(),
+              //   ),
+              // ),
               const SizedBox(
-                height: 10,
+                height: 80,
               ),
               Row(
                 children: [
@@ -63,7 +64,9 @@ class DashboardPage extends StatelessWidget {
                 height: 20,
               ),
               const Divider(),
-              DashboardPageWidgets.topProductList(),
+
+              //! cha
+              //!   DashboardPageWidgets.topProductList(),
               const SizedBox(height: 20),
             ],
           ),

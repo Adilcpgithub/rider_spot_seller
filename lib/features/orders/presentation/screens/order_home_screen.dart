@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ride_spot/features/orders/presentation/screens/order_screen.dart';
+import 'package:ride_spot/features/orders/presentation/screens/updated_order/pages/updated_order_screen.dart';
 import 'package:ride_spot/utility/navigation.dart';
 
 class OrderHomeScreen extends StatelessWidget {
@@ -18,7 +18,7 @@ class OrderHomeScreen extends StatelessWidget {
               icon: Icons.list_alt,
               color: Colors.orange,
               onTap: () {
-                CustomNavigation.push(context, const OrderScreen());
+                CustomNavigation.push(context, const AdminOrderPage());
               },
             ),
             const SizedBox(height: 16),
@@ -28,7 +28,8 @@ class OrderHomeScreen extends StatelessWidget {
               icon: Icons.check_circle,
               color: Colors.green,
               onTap: () {
-                CustomNavigation.push(context, const OrderScreen());
+                //!cha
+                //  CustomNavigation.push(context, const OrderScreen());
               },
             ),
             const SizedBox(height: 16),
@@ -38,7 +39,8 @@ class OrderHomeScreen extends StatelessWidget {
               icon: Icons.cancel,
               color: Colors.red,
               onTap: () {
-                CustomNavigation.push(context, const OrderScreen());
+                //!cha
+                //CustomNavigation.push(context, const OrderScreen());
               },
             ),
           ],
