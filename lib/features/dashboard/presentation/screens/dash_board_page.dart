@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ride_spot/features/dashboard/presentation/widget/dash_page_widgets.dart';
-import 'package:ride_spot/features/dashboard/presentation/widget/graph.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 
 class DashboardPage extends StatelessWidget {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ride_spot/features/categories/presentation/screens/add_product_screen.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 
 class HomePage extends StatelessWidget {

@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
-import 'package:ride_spot/features/categories/presentation/screens/products_list_screen.dart';
-import 'package:ride_spot/pages/bottom_navigation_page.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
-import 'package:ride_spot/utility/navigation.dart';
 
 class AddProductPage extends StatefulWidget {
   final String categoryName;

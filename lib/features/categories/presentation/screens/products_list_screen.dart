@@ -91,6 +91,7 @@ class _ProductPageState extends State<ProductPage> {
                         if (mounted) {
                           AuthService authService = AuthService();
                           final documentId = product['documentId'];
+                          // ignore: use_build_context_synchronously
                           context
                               .read<AddProductBloc>()
                               .add(DeleteProduct(documentId));

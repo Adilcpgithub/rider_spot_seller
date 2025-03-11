@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/auth/modal/product_modal.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
-import 'package:ride_spot/pages/bottom_navigation_page.dart';
 import 'package:ride_spot/theme/custom_colors.dart';
 
 class EditProductPage extends StatefulWidget {
@@ -52,7 +51,7 @@ class _TestState extends State<EditProductPage> {
   }
 
   dd() {
-    context.read<AddProductBloc>().add(GetProduct());
+    context.read<AddProductBloc>().add(const GetProduct());
   }
 
   // Add this method to handle new image selection

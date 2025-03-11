@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ride_spot/blocs/add_product_bloc/bloc/add_product_bloc.dart';
@@ -13,6 +14,20 @@ import 'package:ride_spot/features/users/presentation/blocs/user_detail/user_det
 import 'package:ride_spot/theme/light_theme.dart';
 
 void main() async {
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: "AIzaSyCPhgJ67PJp0-rEJPz82wFpAUVavdaV77M",
+            authDomain: "nutranest-a6417.firebaseapp.com",
+            projectId: "nutranest-a6417",
+            storageBucket: "nutranest-a6417.appspot.com",
+            messagingSenderId: "544605270040",
+            appId: "1:544605270040:web:ebe8021bc66785c5fc536d",
+            measurementId: "G-KEXM8FGNPN"));
+  } else {
+    await Firebase.initializeApp();
+  }
+
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
