@@ -14,23 +14,22 @@ import 'package:ride_spot/features/users/presentation/blocs/user_detail/user_det
 import 'package:ride_spot/theme/light_theme.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
-            apiKey: "AIzaSyCPhgJ67PJp0-rEJPz82wFpAUVavdaV77M",
+            apiKey: "AIzaSyDrV9PhtF0Z99fk1cj0gE-dyzKWLt8jMRs",
             authDomain: "nutranest-a6417.firebaseapp.com",
             projectId: "nutranest-a6417",
-            storageBucket: "nutranest-a6417.appspot.com",
+            storageBucket: "nutranest-a6417.firebasestorage.app",
             messagingSenderId: "544605270040",
-            appId: "1:544605270040:web:ebe8021bc66785c5fc536d",
-            measurementId: "G-KEXM8FGNPN"));
+            appId: "1:544605270040:web:b1109775de64ba18fc536d",
+            measurementId: "G-7R2Y7F2HVZ"));
   } else {
     await Firebase.initializeApp();
   }
 
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

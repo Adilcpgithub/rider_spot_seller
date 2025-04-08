@@ -77,7 +77,7 @@ class UserListScreen extends StatelessWidget {
                           user["name"],
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        subtitle: Text(user["email"]),
+                        subtitle: Text(user["email"] ?? ''),
                       ),
                     );
                   },

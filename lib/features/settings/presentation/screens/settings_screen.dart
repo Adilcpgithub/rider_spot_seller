@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ride_spot/core/shared_prefs.dart';
+import 'package:ride_spot/features/settings/presentation/screens/privacy_screen.dart';
+import 'package:ride_spot/features/settings/presentation/screens/terms_screen.dart';
 import 'package:ride_spot/features/settings/presentation/widgets/logout_show_dialog.dart';
+import 'package:ride_spot/utility/navigation.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -75,7 +78,7 @@ class SettingScreen extends StatelessWidget {
                     icon: Icons.privacy_tip_outlined,
                     title: 'Privacy Policy',
                     onTap: () {
-                      // Navigate to Privacy Policy
+                      CustomNavigation.push(context, PrivacyPolicyPage());
                     },
                   ),
                   const Divider(height: 1),
@@ -83,7 +86,7 @@ class SettingScreen extends StatelessWidget {
                     icon: Icons.description_outlined,
                     title: 'Terms & Conditions',
                     onTap: () {
-                      // Navigate to Terms & Conditions
+                      CustomNavigation.push(context, TermsAndConditionsPage());
                     },
                   ),
                 ],
