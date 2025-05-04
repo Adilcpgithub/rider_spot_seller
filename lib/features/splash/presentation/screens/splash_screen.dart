@@ -36,7 +36,10 @@ class SplashScreen extends StatelessWidget {
                     child: Image.asset(
                   appLogo(),
                   height: deviceHeight(context) / 3,
-                ))
+                )),
+                SizedBox(
+                  height: 10,
+                ),
               ],
             ))),
         Positioned(
